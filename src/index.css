@@ -1,0 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html { direction: rtl; }
+:root { font-family: "Cairo", system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
+body { background: #f7faf9; color: #0f172a; } /* خلفية فاتحة هادئة */
+.ltr { direction: ltr; }
