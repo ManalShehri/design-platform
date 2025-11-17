@@ -4,7 +4,9 @@ export default function Home({ onStart }) {
       <div className="w-full max-w-3xl text-center space-y-6">
         <h1 className="text-4xl md:text-5xl font-extrabold">المنصّة الذكية للمنشورات</h1>
         <p className="text-white/90 leading-8">
-          أنشئي تصاميم فورية من قوالب جاهزة، مع تحسينات بالذكاء الاصطناعي… بالعربية وRTL.
+
+        صمّم منشورك خلال ثوانٍ عبر الذكاء الاصطناعي، مع تصدير جاهز للطباعة أو النشر
+
         </p>
         <button
           onClick={onStart}

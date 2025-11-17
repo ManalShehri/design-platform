@@ -7,7 +7,7 @@ export default function Header() {
           <span className="font-extrabold text-brand-800">المنصّة الذكية للمنشورات</span>
         </div>
         <nav className="text-sm text-slate-600">
-          <a className="hover:text-brand-800" href="#">الدليل</a>
+          {/* <a className="hover:text-brand-800" href="#">الدليل</a> */}
         </nav>
       </div>
     </header>
