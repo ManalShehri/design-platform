@@ -23,13 +23,7 @@ export default function WorkshopInvitePoster({ data }) {
     agenda4Title,
     agenda4Body,
 
-    // معلومات الصناديق السفلية
-    boxDate,
-    boxTime,
-    boxWorkshopTitle,
-    boxAudience,
-    boxQrNote,
-    qrImage, // اختياري: صورة باركود
+    boxes = [], 
 
     email,
     sourceLabel,
@@ -116,51 +110,10 @@ export default function WorkshopInvitePoster({ data }) {
   </section>
 )}
         {/* صناديق المعلومات السفلية (5 صناديق) */}
-        <section className="w-full max-w-4xl">
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-            {/* التاريخ */}
-            <InfoBox
-              label="التاريخ"
-              value={boxDate || "الثلاثاء 11/11/2025"}
-            />
-
-            {/* الوقت */}
-            <InfoBox
-              label="الساعة"
-              value={boxTime || "من 10:30 ص إلى 11:30 ص"}
-            />
-
-            {/* عنوان الورشة */}
-            <InfoBox
-              label="عنوان الورشة"
-              value={boxWorkshopTitle || "شرح عام لنظام جاهز"}
-            />
-
-            {/* الجمهور المستهدف */}
-            <InfoBox
-              label="المستفيدون"
-              value={boxAudience || "منسوبو منظومة البيئة والمياه والزراعة"}
-            />
-
-            {/* الباركود */}
-            <div className="bg-[#005D45] rounded-2xl px-3 py-3 text-center text-white flex flex-col items-center justify-center gap-2">
-              <div className="text-[11px] font-semibold mb-1">
-                {boxQrNote || "من خلال الضغط أو مسح الباركود"}
-              </div>
-              {qrImage ? (
-                <img
-                  src={qrImage}
-                  alt="QR code"
-                  className="w-16 h-16 object-contain bg-white rounded"
-                />
-              ) : (
-                <div className="w-16 h-16 bg-white/10 rounded grid place-items-center text-[9px]">
-                  QR
-                </div>
-              )}
-            </div>
-          </div>
-        </section>
+          
+       {boxes.length > 0 && (
+  <BoxesSection boxes={boxes} />
+)}
       </main>
 
       {/* FOOTER */}
@@ -173,6 +126,52 @@ export default function WorkshopInvitePoster({ data }) {
   );
 }
 
+function BoxesSection({ boxes }) {
+  // لا أكثر من 5
+  const limited = boxes.slice(0, 5);
+  const count = limited.length;
+
+  if (count === 0) return null;
+
+  // لو 4 أو أقل → كلهم في صف واحد
+  if (count <= 4) {
+    return (
+      <section className="w-full max-w-4xl mx-auto mt-4 mb-8">
+        <div className="flex flex-wrap justify-center gap-4">
+          {limited.map((box, idx) => (
+            <DynamicBox key={box.id || idx} box={box} index={idx} />
+          ))}
+        </div>
+      </section>
+    );
+  }
+
+  // لو 5 → 3 فوق + 2 تحت
+  const firstRow = limited.slice(0, 3);
+  const secondRow = limited.slice(3);
+
+  return (
+    <section className="w-full max-w-4xl mx-auto mt-4 mb-8">
+      <div className="flex flex-col items-center gap-4">
+        <div className="flex flex-wrap justify-center gap-4">
+          {firstRow.map((box, idx) => (
+            <DynamicBox key={box.id || idx} box={box} index={idx} />
+          ))}
+        </div>
+        <div className="flex flex-wrap justify-center gap-4">
+          {secondRow.map((box, idx) => (
+            <DynamicBox
+              key={box.id || idx + 3}
+              box={box}
+              index={idx + 3}
+            />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 /* ————— عناصر فرعية ————— */
 
 function AgendaItem({ title, body }) {
@@ -182,6 +181,29 @@ function AgendaItem({ title, body }) {
       <div className="w-10 h-1.5 bg-[#FFC629] rounded-full mb-3" />
       <h4 className="text-[16px] font-bold text-[#005D45] mb-2">{title}</h4>
       <p className="text-[13px] text-[#005D45] leading-relaxed">{body}</p>
+    </div>
+  );
+}
+
+function DynamicBox({ box, index }) {
+  return (
+    <div
+      className="bg-[#005D45] rounded-2xl px-4 py-4 text-white flex flex-col items-center text-center gap-2 w-[190px] min-h-[120px]"
+    >
+      <div className="flex flex-col items-center gap-1">
+        <span className="text-[14px]">
+          {box.icon || "📌"}
+        </span>
+        <span className="text-[12px] font-bold">
+          {box.label || `الصندوق ${index + 1}`}
+        </span>
+      </div>
+
+      <div className="w-8 h-1 bg-[#FFC629] rounded-full" />
+
+      <p className="text-[12px] leading-relaxed whitespace-pre-line">
+        {box.text || ""}
+      </p>
     </div>
   );
 }

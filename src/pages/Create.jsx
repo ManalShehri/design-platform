@@ -74,6 +74,33 @@ const TEMPLATES = {
 ],
 };
 
+const DEFAULT_INVITE_BOXES = [
+  {
+    id: 1,
+    label: "التاريخ",
+    icon: "📅",
+    text: "الثلاثاء 11/11/2025",
+  },
+  {
+    id: 2,
+    label: "الوقت",
+    icon: "⏰",
+    text: "من 10:30 ص إلى 11:30 ص",
+  },
+  {
+    id: 3,
+    label: "الفئة المستهدفة",
+    icon: "👥",
+    text: "منسوبو منظومة البيئة والمياه والزراعة",
+  },
+  {
+    id: 4,
+    label: "الباركود",
+    icon: "� QR",
+    text: "للانضمام للورشة يمكن مسح الباركود",
+  },
+];
+
 /* خريطة القوالب → مكوّن المعاينة */
 const previewByTemplate = {
   "تعريف بمنصة أو خدمة": (data) => <GeneralInfoPoster data={data} />,
@@ -99,6 +126,14 @@ export default function Create({ onBack }) {
   const [busy, setBusy] = useState(false);
 
   const fields = useMemo(() => TEMPLATES[template] ?? [], [template]);
+
+    // 🟢 هنا نحدد البوكسات التي ستُستخدم في الفورم والمعاينة لقالب دعوة ورشة عمل
+  const inviteBoxes =
+    template === "دعوة ورشة عمل"
+      ? (formData.boxes && formData.boxes.length
+          ? formData.boxes          // لو فيه بوكسات محفوظة من المستخدم
+          : DEFAULT_INVITE_BOXES)   // لو مافي → نرجع الافتراضية
+      : [];
 
   const previewRef = useRef(null);
 
@@ -242,6 +277,51 @@ const exportPNG = async () => {
     }
   };
 
+  const addBox = () => {
+  setFormData((d) => {
+    let boxes = Array.isArray(d.boxes) && d.boxes.length
+      ? [...d.boxes]
+      : [...DEFAULT_INVITE_BOXES];
+
+    if (boxes.length >= 5) return d;
+    boxes.push({ id: Date.now(), label: "", text: "", icon: "" });
+    return { ...d, boxes };
+  });
+};
+
+const updateBox = (index, field, value) => {
+  setFormData((d) => {
+    let boxes =
+      Array.isArray(d.boxes) && d.boxes.length
+        ? [...d.boxes]
+        : [...DEFAULT_INVITE_BOXES];
+
+    if (!boxes[index]) return d;
+    boxes[index] = { ...boxes[index], [field]: value };
+    return { ...d, boxes };
+  });
+};
+
+const removeBox = (index) => {
+  setFormData((d) => {
+    let boxes =
+      Array.isArray(d.boxes) && d.boxes.length
+        ? [...d.boxes]
+        : [...DEFAULT_INVITE_BOXES];
+
+    boxes.splice(index, 1);
+    return { ...d, boxes };
+  });
+};
+
+
+  const previewData =
+    template === "دعوة ورشة عمل"
+      ? {
+          ...formData,
+          boxes: inviteBoxes, // سواء كانت افتراضية أو معدلة من المستخدم
+        }
+      : formData;
   return (
     <div className="max-w-6xl mx-auto px-4 md:px-6 py-6 grid md:grid-cols-[420px_minmax(0,1fr)] gap-6">
       {/* يمين: لوحة الإدخال —Scrollable only */}
@@ -316,6 +396,72 @@ const exportPNG = async () => {
   </div>
 ))}
         </div>
+        {/* =========================
+    بوكسات دعوة ورشة عمل فقط
+    ========================= */}
+    
+{template === "دعوة ورشة عمل" && (
+  <div className="mt-6 border-t pt-4 space-y-3">
+    <div className="flex items-center justify-between">
+      <h3 className="font-bold text-brand-800 text-sm">
+        الصناديق الخضراء (حتى 5)
+      </h3>
+      <button
+        type="button"
+        onClick={addBox}
+        disabled={(inviteBoxes.length || 0) >= 5}
+        className="text-xs px-3 py-1 rounded-lg bg-brand-500 text-white disabled:opacity-40"
+      >
+        + إضافة بوكس
+      </button>
+    </div>
+
+    {inviteBoxes.map((box, index) => (
+      <div
+        key={box.id || index}
+        className="border rounded-lg p-3 bg-slate-50 space-y-2"
+      >
+        <div className="flex items-center justify-between gap-2">
+          <span className="text-xs text-slate-600">
+            بوكس رقم {index + 1}
+          </span>
+          <button
+            type="button"
+            onClick={() => removeBox(index)}
+            className="text-[11px] text-red-500"
+          >
+            حذف
+          </button>
+        </div>
+
+        <div className="grid grid-cols-2 gap-2">
+          <input
+            type="text"
+            className="border rounded-lg px-2 py-1 text-xs"
+            placeholder="عنوان البوكس (مثال: التاريخ)"
+            value={box.label || ""}
+            onChange={(e) => updateBox(index, "label", e.target.value)}
+          />
+          <input
+            type="text"
+            className="border rounded-lg px-2 py-1 text-xs"
+            placeholder="أيقونة (مثال: 📅)"
+            value={box.icon || ""}
+            onChange={(e) => updateBox(index, "icon", e.target.value)}
+          />
+        </div>
+
+        <textarea
+          rows={3}
+          className="w-full border rounded-lg p-2 text-xs"
+          placeholder="نص البوكس..."
+          value={box.text || ""}
+          onChange={(e) => updateBox(index, "text", e.target.value)}
+        />
+      </div>
+    ))}
+  </div>
+)}
 
         {/* AI تحسين */}
         <div className="mt-6 border rounded-xl p-4 bg-slate-50 space-y-3">
@@ -362,7 +508,7 @@ const exportPNG = async () => {
         className="bg-white rounded-xl shadow-card overflow-hidden"
         style={{ width: 900, height: 1273 }} // حجم البوستر الفعلي
       >
-        {renderPreview(template, formData)}
+        {renderPreview(template, previewData)}
       </div>
     </div>
   </div>
