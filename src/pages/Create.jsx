@@ -5,7 +5,7 @@ import GeneralInfoPoster from "../components/GeneralInfoPoster.jsx";
 import WorkshopInvitePoster from "../components/WorkshopInvitePoster.jsx";
 import ServiceLaunchPoster from "../components/ServiceLaunchPoster.jsx";
 
-
+// 950/1689
 /* ————— القوالب (الحقول) ————— */
 const TEMPLATES = {
  "تعريف بمنصة أو خدمة": [

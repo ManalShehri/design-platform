@@ -1,4 +1,6 @@
 // src/components/WorkshopInvitePoster.jsx
+import PosterHeader from "./PosterHeader.jsx";
+import PosterFooter from "./PosterFooter.jsx";
 
 export default function WorkshopInvitePoster({ data }) {
   const {
@@ -36,25 +38,13 @@ export default function WorkshopInvitePoster({ data }) {
 
   return (
     <div className="w-full h-full bg-[#F3FAF4] text-[#005D45] flex flex-col font-lina">
-      {/* HEADER (نفس general info تقريباً) */}
-            <header className="px-8 pt-8 pb-3 flex items-center justify-between text-[10px] leading-snug">
-        <div className="flex-shrink-0">
-            <img src=" https://www.mewa.gov.sa/ar/Ministry/AboutMinistry/identity/MEWA%20-%20Brandmark%20-%20RGB.png" alt="Logo" className="w-180 h-24 object-contain" />
-        </div>
-
-        {/* الإدارة يسار + مستطيل على يمين النص */}
-        <div className="flex items-start gap-2.5 flex-row-reverse">
-          <div className="leading-snug text-right">
-            <div className="text-[13px] font-bold">
-              {deptLine1 || "وكالة الوزارة لتقنية المعلومات والتحول الرقمي"}
-            </div>
-            <div className="text-[11px] opacity-80 mt-0.5">
-              {deptLine2 || "الإدارة العامة للتحول الرقمي"}
-            </div>
-          </div>
-          <div className="w-[3px] h-10 bg-[#FFC629] rounded-full" />
-        </div>
-      </header>
+ <PosterHeader
+        logoUrl={logoUrl}
+        deptLine1={deptLine1}
+        deptLine2={deptLine2}
+        accentColor="#629FFC" // الأزرق الطويل زي ما وصفتي
+        variant="short-bar"
+      />
 
 
 
@@ -62,22 +52,22 @@ export default function WorkshopInvitePoster({ data }) {
       <main className="px-20 pt-8 flex-1 flex flex-col justify-start">
         {/* عناوين الدعوة */}
         <section className="max-w-3xl mb-8">
-          <p className="text-[20px] text-[#005D45] leading-snug">
+          <p className="text-[35px] text-[#005D45] leading-snug">
             {inviteLine || "ندعوكم لحضور ورشة عمل عن بُعد"}
           </p>
 
-          <p className="text-[32px] font-bold text-[#46C752] leading-snug mt-4">
+          <p className="text-[40px] font-bold text-[#46C752] leading-snug mt-4">
             {audienceLine || "لتدريب منسوبي منظومة البيئة والمياه والزراعة"}
           </p>
 
-          <p className="text-[28px] font-bold text-[#005D45] leading-snug mt-1">
+          <p className="text-[28px] font-bold text-[#005D45] leading-snug mt-5">
             {systemLine || "على نظام جاهز"}
           </p>
         </section>
 
         {/* أجندة الورشة */}
         <section className="w-full max-w-4xl bg-[#EAF5EC] rounded-3xl px-10 py-8 mb-10">
-          <h3 className="text-[20px] font-bold text-[#005D45] mb-4">
+          <h3 className="text-[30px] font-bold text-[#005D45] mb-4">
             محاور الورشة:
           </h3>
 
@@ -120,7 +110,7 @@ export default function WorkshopInvitePoster({ data }) {
       <img
         src={workshopImage}
         alt="Workshop Image"
-        className="w-full h-64 object-cover rounded-xl"
+        className="w-full h-100 object-cover rounded-xl"
       />
     </div>
   </section>
@@ -174,20 +164,11 @@ export default function WorkshopInvitePoster({ data }) {
       </main>
 
       {/* FOOTER */}
-      <footer className="px-5 pb-6 flex items-center justify-between text-[10px]">
-        <div className="flex items-center gap-1.5 text-[#005D45]">
-          <span className="text-sm">✉️</span>
-          <span className="ltr">
-            {email || "ITCOM@mewa.gov.sa"}
-          </span>
-        </div>
-
-        <div className="ml-0">
-          <div className="bg-[#005D45] text-white px-4 py-2 rounded-l-lg rounded-r-none text-[10px]">
-            {sourceLabel || "ITCOM@mewa.gov.sa"}
-          </div>
-        </div>
-      </footer>
+   <PosterFooter
+        email={email}
+        sourceLabel={sourceLabel || "المصدر: وكالة الوزارة للبحث والابتكار"}
+        rightLogos={[]}
+      />
     </div>
   );
 }
