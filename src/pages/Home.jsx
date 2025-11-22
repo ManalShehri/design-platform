@@ -9,7 +9,7 @@ export default function Home({ onStart }) {
         </h1>
 
         <p className="text-white/90 leading-8 text-lg">
-          صمّم منشورك خلال ثوانٍ عبر الذكاء الاصطناعي، مع تصدير جاهز للطباعة أو النشر
+          صمّم منشورك خلال ثوانٍ عبر الذكاء الاصطناعي مع تصدير جاهز للطباعة أو النشر
         </p>
 
         <button
