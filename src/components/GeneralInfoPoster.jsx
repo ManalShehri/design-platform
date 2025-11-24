@@ -1,3 +1,6 @@
+import PosterHeader from "./PosterHeader.jsx";
+import PosterFooter from "./PosterFooter.jsx";
+
 export default function GeneralInfoPoster({ data }) {
   const {
     logoUrl,
@@ -69,26 +72,12 @@ export default function GeneralInfoPoster({ data }) {
       </main>
 
       {/* FOOTER - padding أصغر من المحتوى */}
-      <footer className="px-5 pb-6 flex items-center justify-between text-[14px]">
-        {/* الإيميل يمين */}
-        <div className="flex items-center gap-1.5 text-[#005D45]">
-             <span className="ltr">
-           {"يسعدنا تواصلك معنا عبر البريد الالكتروني"}
-          </span>
-          <span className="text-sm">✉️</span>
-          <span className="ltr">
-            {email || "ITCOM@mewa.gov.sa"}
-          </span>
-          
-        </div>
-
-        {/* المصدر يسار في مستطيل أخضر ملاصق للطرف */}
-        <div className="ml-0">
-          <div className="bg-[#005D45] text-white px-4 py-2 rounded-l-lg rounded-r-none text-[10px]">
-            {sourceLabel || "المصدر: الهيئة السعودية للبيانات والذكاء الاصطناعي"}
-          </div>
-        </div>
-      </footer>
+      {/* FOOTER */}
+           <PosterFooter
+             email={email}
+             sourceLabel={sourceLabel}
+             rightLogos={[]}
+           />
     </div>
   );
 }

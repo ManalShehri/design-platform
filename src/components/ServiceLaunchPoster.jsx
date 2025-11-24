@@ -13,9 +13,12 @@ export default function ServiceLaunchPoster({ data }) {
     serviceTitle,     // ترخيص المتاجر الإلكترونية...
     serviceBody,      // نص تعريفي بسيط
 
-    // أهداف / مربعات 01 - 02
+    // حقول قديمة للاحتياط
     objective1Text,
     objective2Text,
+
+    // أهداف الخدمة الديناميكية من Create
+    serviceObjectives = [],
 
     // صورة رئيسية
     mainImage,
@@ -31,10 +34,29 @@ export default function ServiceLaunchPoster({ data }) {
     sourceLabel,
   } = data;
 
+  // fallback لو ما فيه serviceObjectives
+  const fallbackObjectives = [
+    {
+      text:
+        objective1Text ||
+        "تنظيم نشاط التسويق الإلكتروني للمنتجات الزراعية للأفراد ضمن إطار نظامي واضح.",
+    },
+    {
+      text:
+        objective2Text ||
+        "تمكين الأفراد السعوديين من ملاك المزارع ومنتجي المحاصيل من إنشاء متاجر إلكترونية موثوقة لبيع المنتجات (مواد أولية أو معبأة).",
+    },
+  ];
+
+  const finalObjectives =
+    Array.isArray(serviceObjectives) && serviceObjectives.length > 0
+      ? serviceObjectives.slice(0, 6)
+      : fallbackObjectives;
+
   return (
-    <div className="w-full h-full bg-[#F3FAF4] text-[#005D45] flex flex-col font-lina">
-      {/* HEADER (نفس general info تقريباً) */}
- <PosterHeader
+    <div className="w-full min-h-[1273px] bg-[#F3FAF4] text-[#005D45] flex flex-col font-lina">
+      {/* HEADER */}
+      <PosterHeader
         logoUrl={logoUrl}
         deptLine1={deptLine1}
         deptLine2={deptLine2}
@@ -46,34 +68,32 @@ export default function ServiceLaunchPoster({ data }) {
       <main className="px-20 pt-8 flex-1 flex flex-col justify-start">
         {/* العناوين العليا */}
         <section className="max-w-3xl mb-6">
-          <p className="text-[22px] text-[#46C752] leading-snug">
-            {serviceTagline || "إطلاق خدمة إصدار"}
+          <p className="text-[34px] text-[#46C752] leading-snug">
+            {serviceTagline}
           </p>
 
-          <h1 className="mt-3 text-[34px] font-bold text-[#005D45] leading-snug">
-            {serviceTitle || "ترخيص المتاجر الإلكترونية للأفراد لتسويق المنتجات الزراعية"}
+          <h1 className="mt-3 text-[38px] font-bold text-[#005D45] leading-snug">
+            {serviceTitle}
           </h1>
 
-          <p className="mt-4 text-[15px] leading-[1.9] text-[#005D45] text-justify">
-            {serviceBody ||
-              "تمكّن أصحاب المتاجر الإلكترونية من الأفراد السعوديين من تسويق المنتجات الزراعية ضمن إطار نظامي واضح، بما في ذلك منتجي المحاصيل الذين لديهم سجل زراعي أو من يتعاقد معهم لتسويق المنتجات الزراعية كمواد أولية أو معبأة."}
+          <p className="mt-4 text-[20px] leading-[1.9] text-[#005D45] text-justify">
+            {serviceBody}
           </p>
         </section>
 
-        {/* أهداف الخدمة 01 / 02 */}
+        {/* أهداف الخدمة – نفس الستايل، لكن ديناميكي حتى ٦ أهداف */}
         <section className="w-full max-w-4xl mx-auto mt-4">
-          <h3 className="text-[18px] font-bold text-[#46C752] mb-4">
+          <h3 className="text-[28px] font-bold text-[#46C752] mb-4">
             أهداف الخدمة:
           </h3>
           <div className="grid md:grid-cols-2 gap-6">
-            <ObjectiveCard number="01" text={
-              objective1Text ||
-              "تنظيم نشاط التسويق الإلكتروني للمنتجات الزراعية للأفراد ضمن إطار نظامي واضح."
-            } />
-            <ObjectiveCard number="02" text={
-              objective2Text ||
-              "تمكين الأفراد السعوديين من ملاك المزارع ومنتجي المحاصيل من إنشاء متاجر إلكترونية موثوقة لبيع المنتجات (مواد أولية أو معبأة)."
-            } />
+            {finalObjectives.map((obj, idx) => (
+              <ObjectiveCard
+                key={obj.id || idx}
+                number={String(idx + 1).padStart(2, "0")}
+                text={obj.text}
+              />
+            ))}
           </div>
         </section>
 
@@ -93,11 +113,13 @@ export default function ServiceLaunchPoster({ data }) {
         )}
 
         {/* الشريط السفلي (تاريخ الإطلاق - المستفيدون - الوصول للخدمة/الباركود) */}
-        <section className="w-full max-w-4xl mx-auto mb-8">
+        <section className="w-full max-w-4xl mx-auto mb-8 mt-8">
           <div className="bg-[#E6F2E8] rounded-3xl px-8 py-5 grid md:grid-cols-3 gap-6">
             <InfoRow
               label="تاريخ الإطلاق"
-              value={launchDate || "17 نوفمبر 2025 م\n26 جمادى الأولى 1447 هـ"}
+              value={
+                launchDate || "17 نوفمبر 2025 م\n26 جمادى الأولى 1447 هـ"
+              }
             />
             <InfoRow
               label="المستفيدون"
@@ -131,7 +153,7 @@ export default function ServiceLaunchPoster({ data }) {
       {/* FOOTER */}
       <PosterFooter
         email={email}
-        sourceLabel={sourceLabel || "المصدر: وكالة الوزارة للبحث والابتكار"}
+        sourceLabel={sourceLabel}
         rightLogos={[]}
       />
     </div>

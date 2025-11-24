@@ -1,50 +1,129 @@
+// Server.js
 import express from "express";
 import cors from "cors";
-import dotenv from "dotenv";
-import OpenAI from "openai";
-
-dotenv.config();
+import { GoogleGenerativeAI } from "@google/generative-ai";
+import "dotenv/config";
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-// POST /api/enhance
+const PORT = process.env.PORT || 3001;
+
+// ✅ تهيئة Gemini
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+// const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-light" });
+// const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+
+
+// 👇 الحقول اللي نسمح للـ AI يعدلها لكل قالب
+const ENHANCE_FIELDS_BY_TEMPLATE = {
+  "تعريف بمنصة أو خدمة": ["titlePrimary", "titleSecondary", "body"],
+};
+
+// =========  API: /api/enhance  ==========
 app.post("/api/enhance", async (req, res) => {
-  const { template, styleTone, keywords, formData } = req.body;
   try {
-    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+    const { template, styleTone, keywords, formData, selectedFields } = req.body;
 
+    console.log("[Enhance] template:", template);
+
+    // 1) نحدد الحقول المسموح تعديلها في هذا القالب
+    const defaultAllowed = ENHANCE_FIELDS_BY_TEMPLATE[template] || [];
+    const effectiveFields =
+      Array.isArray(selectedFields) && selectedFields.length
+        ? selectedFields
+        : defaultAllowed;
+
+    if (!effectiveFields.length) {
+      return res.json({ enhanced: {} });
+    }
+
+    // 2) نأخذ النصوص الحالية من formData فقط
+    const sourceFields = {};
+    for (const field of effectiveFields) {
+      if (formData?.[field]) {
+        sourceFields[field] = formData[field];
+      }
+    }
+
+    if (!Object.keys(sourceFields).length) {
+      return res.json({ enhanced: {} });
+    }
+
+    const toneArabic =
+      styleTone === "لطيف" ? "أسلوب لطيف وبسيط" : "أسلوب رسمي وعملي";
+    const keywordsText = keywords
+      ? `الكلمات المفتاحية (اختياري، يمكنك أخذها بعين الاعتبار دون إضافة معلومات جديدة): ${keywords}\n`
+      : "";
+
+    // 3) البرومبت — يطلب JSON فقط، بدون إضافة معلومات جديدة
     const prompt = `
-أنت مساعد تحرير عربي. أعطِ صياغة محسّنة ومختصرة للنص بناءً على:
-- نوع القالب: ${template}
-- الأسلوب: ${styleTone}
-- الكلمات المفتاحية: ${keywords}
-- البيانات: ${JSON.stringify(formData, null, 2)}
+أنت مساعد لغوي محترف تكتب باللغة العربية.
 
-أعد نفس الحقول فقط بنص عربي منسّق (لا تغيّر أسماء المفاتيح)، مثال المخرجات:
-{ "title": "...", "date": "...", "duration": "...", "topics": "سطر1\\nسطر2", "mainTitle": "...", "subTitle": "...", "content": "...", "image": "${formData.image||""}" }
+المطلوب:
+- إعادة صياغة النصوص التالية في سياق تعريف رسمي بمنصة أو خدمة تقنية.
+- حسّن الوضوح، والترابط، والأسلوب، لكن:
+  - لا تغيّر المعنى أو الفكرة الأساسية.
+  - لا تضف معلومات جديدة غير موجودة في النص الأصلي.
+  - لا تعدّل الأرقام أو التواريخ أو أسماء الأنظمة أو الجهات.
+- الأسلوب المطلوب: ${toneArabic}.
+${keywordsText}
+- إذا كان النص قصيرًا (مثل العنوان)، فحافظ على طول قريب من النص الأصلي.
+- أعد النتيجة بصيغة JSON بدون أي نص إضافي خارج JSON، وبنفس أسماء الحقول التالية فقط:
+  ${effectiveFields.join(", ")}
+
+النصوص الأصلية (بصيغة JSON):
+${JSON.stringify(sourceFields, null, 2)}
     `.trim();
 
-    const resp = await openai.responses.create({
-      model: "gpt-4o-mini",
-      input: prompt,
-      temperature: 0.7,
+    const result = await model.generateContent({
+      contents: [{ role: "user", parts: [{ text: prompt }] }],
     });
 
-    // استخرج النص
-    const text = resp.output_text || "";
-    // حاول نفكّه كـ JSON (لو فشل، رجّع النص كما هو داخل content)
-    let enhanced = {};
-    try { enhanced = JSON.parse(text); } catch { enhanced = { content: text }; }
+    const responseText =
+      result.response.text?.() || result.response.candidates?.[0]?.content?.parts?.[0]?.text || "";
 
-    res.json({ enhanced });
-  } catch (e) {
-    console.error(e);
-    res.status(500).json({ error: "AI enhancement failed" });
+    console.log("[Enhance] raw model response:", responseText);
+
+    // أحيانًا Gemini يرجع ```json ... ``` فننظفها
+    const cleaned = responseText
+      .replace(/```json/gi, "")
+      .replace(/```/g, "")
+      .trim();
+
+    let enhanced = {};
+    try {
+      enhanced = JSON.parse(cleaned);
+    } catch (err) {
+      console.error("[Enhance] JSON parse error:", err);
+      return res.status(500).json({
+        error: "PARSE_ERROR",
+        raw: responseText,
+      });
+    }
+
+    // نضمن أننا ما نرجع إلا الحقول المسموح تعديلها
+    const filtered = {};
+    for (const f of effectiveFields) {
+      if (typeof enhanced[f] === "string") {
+        filtered[f] = enhanced[f];
+      }
+    }
+
+    console.log("[Enhance] filtered:", filtered);
+
+    return res.json({ enhanced: filtered });
+  } catch (err) {
+    console.error("Enhance API error:", err);
+    return res.status(500).json({
+      error: "SERVER_ERROR",
+      message: err.message,
+    });
   }
 });
 
-// شغّل الخادم
-const PORT = process.env.PORT || 8787;
-app.listen(PORT, () => console.log("API running on http://localhost:"+PORT));
+app.listen(PORT, () => {
+  console.log(`✅ Enhance API listening on port ${PORT}`);
+});

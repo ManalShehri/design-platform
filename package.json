@@ -5,17 +5,16 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
-    "lint": "eslint .",
-    "preview": "vite preview"
+    "server": "node Server.js"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
     "html2canvas": "^1.4.1",
     "jspdf": "^3.0.3",
-    "openai": "^6.8.1",
+    "openai": "^6.9.1",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
   },

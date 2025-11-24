@@ -10,7 +10,7 @@ export default function PosterHeader({
   return (
                <header className="px-8 pt-8 pb-3 flex items-center justify-between text-[10px] leading-snug">
         <div className="flex-shrink-0">
-            <img src=" https://www.mewa.gov.sa/ar/Ministry/AboutMinistry/identity/MEWA%20-%20Brandmark%20-%20RGB.png" alt="Logo" className="w-180 h-24 object-contain" />
+            <img src="/src/assets/MEWA_LOGO.png" alt="Logo" className="w-180 h-24 object-contain" />
         </div>
 
         {/* الإدارة يسار + مستطيل على يمين النص */}

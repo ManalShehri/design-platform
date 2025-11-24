@@ -2,7 +2,7 @@
 
 export default function PosterFooter({
   email = "ITCOM@mewa.gov.sa",
-  sourceLabel = "المصدر: إدارة ...",
+  sourceLabel = "",
   rightLogos = [], // احتياط للمستقبل
 }) {
   return (
@@ -24,9 +24,14 @@ export default function PosterFooter({
           </span>
         </div> */}
         {/* البوكس الأخضر أقصى اليسار */}
-        <div className="bg-[#005D45] text-white px-4 py-2 rounded-l-lg rounded-r-none text-[10px]">
-          {sourceLabel || "المصدر: إدارة ..."}
-        </div>
+        {/* <div className="bg-[#005D45] text-white px-4 py-2 rounded-l-lg rounded-r-none text-[10px]">
+          {sourceLabel}
+        </div> */}
+        {sourceLabel && (
+  <div className="bg-[#005D45] text-white px-4 py-2 rounded-l-lg rounded-r-none text-[10px]">
+    {sourceLabel}
+  </div>
+)}
 
         {/* الإيميل يمين */}
         

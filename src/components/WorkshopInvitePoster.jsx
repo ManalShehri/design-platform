@@ -68,7 +68,7 @@ export default function WorkshopInvitePoster({ data }) {
       : fallbackAgenda;
 
   return (
-    <div className="w-full h-full bg-[#F3FAF4] text-[#005D45] flex flex-col font-lina">
+    <div className="w-full min-h-[1273px] bg-[#F3FAF4] text-[#005D45] flex flex-col font-lina">
       <PosterHeader
         logoUrl={logoUrl}
         deptLine1={deptLine1}
@@ -82,21 +82,21 @@ export default function WorkshopInvitePoster({ data }) {
         {/* عناوين الدعوة */}
         <section className="max-w-3xl mb-8">
           <p className="text-[35px] text-[#005D45] leading-snug">
-            {inviteLine || "ندعوكم لحضور ورشة عمل عن بُعد"}
+            {inviteLine}
           </p>
 
           <p className="text-[40px] font-bold text-[#46C752] leading-snug mt-4">
-            {audienceLine || "لتدريب منسوبي منظومة البيئة والمياه والزراعة"}
+            {audienceLine}
           </p>
 
-          <p className="text-[28px] font-bold text-[#005D45] leading-snug mt-5">
-            {systemLine || "على نظام جاهز"}
+          <p className="text-[30px] font-bold text-[#005D45] leading-snug mt-5">
+            {systemLine}
           </p>
         </section>
 
         {/* أجندة الورشة – نفس التصميم، لكن ديناميكي حتى ٦ محاور */}
         <section className="w-full max-w-4xl bg-[#EAF5EC] rounded-3xl px-10 py-8 mb-10">
-          <h3 className="text-[30px] font-bold text-[#005D45] mb-4">
+          <h3 className="text-[32px] font-bold text-[#005D45] mb-4">
             محاور الورشة:
           </h3>
 
@@ -127,7 +127,7 @@ export default function WorkshopInvitePoster({ data }) {
       {/* FOOTER */}
       <PosterFooter
         email={email}
-        sourceLabel={sourceLabel || "المصدر: وكالة الوزارة للبحث والابتكار"}
+        sourceLabel={sourceLabel}
         rightLogos={[]}
       />
     </div>
@@ -189,8 +189,8 @@ function AgendaItem({ title, body }) {
     <div className="bg-white/70 rounded-2xl px-4 py-4 h-full shadow-sm">
       {/* الشريط الأصفر */}
       <div className="w-10 h-1.5 bg-[#FFC629] rounded-full mb-3" />
-      <h4 className="text-[16px] font-bold text-[#005D45] mb-2">{title}</h4>
-      <p className="text-[13px] text-[#005D45] leading-relaxed">{body}</p>
+      <h4 className="text-[20px] font-bold text-[#005D45] mb-2">{title}</h4>
+      <p className="text-[15px] text-[#005D45] leading-relaxed">{body}</p>
     </div>
   );
 }
@@ -199,9 +199,9 @@ function DynamicBox({ box, index }) {
   return (
     <div className="bg-[#005D45] rounded-2xl px-4 py-4 text-white flex flex-col items-center text-center gap-2 w-[190px] min-h-[120px]">
       <div className="flex flex-col items-center gap-1">
-        <span className="text-[14px]">{box.icon || "📌"}</span>
+        <span className="text-[14px]">{box.icon }</span>
         <span className="text-[12px] font-bold">
-          {box.label || `الصندوق ${index + 1}`}
+          {box.label || `المربع ${index + 1}`}
         </span>
       </div>
 
