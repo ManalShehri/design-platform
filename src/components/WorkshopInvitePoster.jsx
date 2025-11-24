@@ -37,28 +37,24 @@ export default function WorkshopInvitePoster({ data }) {
   // لو لا → نرجع للمحاور الأربعة الافتراضية الموجودة الآن
   const fallbackAgenda = [
     {
-      title: agenda1Title || "خدمات الموارد المؤسسية",
+      title: agenda1Title,
       body:
-        agenda1Body ||
-        "التعرّف على أبرز خدمات الموارد المؤسسية وكيفية الاستفادة منها.",
+        agenda1Body,
     },
     {
-      title: agenda2Title || "خدمات الشبكات والهواتف",
+      title: agenda2Title,
       body:
-        agenda2Body ||
-        "عرض موجز للخدمات الفنية المقدّمة للشبكات وأنظمة الاتصال.",
+        agenda2Body,
     },
     {
-      title: agenda3Title || "خدمات الأمن والسلامة",
+      title: agenda3Title,
       body:
-        agenda3Body ||
-        "توضيح دور نظام جاهز في طلبات وخدمات الأمن والسلامة.",
+        agenda3Body,
     },
     {
-      title: agenda4Title || "خدمات الدعم والتطبيقات",
+      title: agenda4Title,
       body:
-        agenda4Body ||
-        "شرح آلية رفع الطلبات للتطبيقات والدعم الفني والمتابعة.",
+        agenda4Body,
     },
   ];
 

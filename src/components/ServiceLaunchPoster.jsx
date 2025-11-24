@@ -38,13 +38,11 @@ export default function ServiceLaunchPoster({ data }) {
   const fallbackObjectives = [
     {
       text:
-        objective1Text ||
-        "تنظيم نشاط التسويق الإلكتروني للمنتجات الزراعية للأفراد ضمن إطار نظامي واضح.",
+        objective1Text,
     },
     {
       text:
-        objective2Text ||
-        "تمكين الأفراد السعوديين من ملاك المزارع ومنتجي المحاصيل من إنشاء متاجر إلكترونية موثوقة لبيع المنتجات (مواد أولية أو معبأة).",
+        objective2Text
     },
   ];
 
@@ -68,22 +66,22 @@ export default function ServiceLaunchPoster({ data }) {
       <main className="px-20 pt-8 flex-1 flex flex-col justify-start">
         {/* العناوين العليا */}
         <section className="max-w-3xl mb-6">
-          <p className="text-[34px] text-[#46C752] leading-snug">
+          <p className="text-[38px] text-[#46C752] leading-snug">
             {serviceTagline}
           </p>
 
-          <h1 className="mt-3 text-[38px] font-bold text-[#005D45] leading-snug">
+          <h1 className="mt-3 text-[40px] font-bold text-[#005D45] leading-snug">
             {serviceTitle}
           </h1>
 
-          <p className="mt-4 text-[20px] leading-[1.9] text-[#005D45] text-justify">
+          <p className="mt-4 text-[22px] leading-[1.9] text-[#005D45] text-justify">
             {serviceBody}
           </p>
         </section>
 
         {/* أهداف الخدمة – نفس الستايل، لكن ديناميكي حتى ٦ أهداف */}
         <section className="w-full max-w-4xl mx-auto mt-4">
-          <h3 className="text-[28px] font-bold text-[#46C752] mb-4">
+          <h3 className="text-[32px] font-bold text-[#46C752] mb-4">
             أهداف الخدمة:
           </h3>
           <div className="grid md:grid-cols-2 gap-6">
@@ -104,7 +102,7 @@ export default function ServiceLaunchPoster({ data }) {
               <img
                 src={mainImage}
                 alt="Service main"
-                className="w-full h-64 object-cover"
+                className="w-full h-full object-cover"
               />
               {/* تدرج خفيّ: أعلى شبه مغطي، أسفل أوضح */}
               <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-transparent via-[#F3FAF4]/20 to-[#F3FAF4]/70" />
@@ -166,10 +164,10 @@ function ObjectiveCard({ number, text }) {
   return (
     <div className="rounded-2xl px-5 py-4 bg-white/60 border border-[#46C752]/15">
       <div className="flex items-center gap-2 mb-2">
-        <span className="text-[18px] font-bold text-[#46C752]">{number}</span>
+        <span className="text-[22px] font-bold text-[#46C752]">{number}</span>
         <div className="w-10 h-1.5 bg-[#FFC629] rounded-full" />
       </div>
-      <p className="text-[13px] text-[#005D45] leading-relaxed text-justify">
+      <p className="text-[15px] text-[#005D45] leading-relaxed text-justify">
         {text}
       </p>
     </div>
@@ -179,10 +177,10 @@ function ObjectiveCard({ number, text }) {
 function InfoRow({ label, value }) {
   return (
     <div className="flex flex-col justify-center">
-      <div className="text-[12px] font-bold text-[#005D45] mb-1">
+      <div className="text-[14px] font-bold text-[#005D45] mb-1">
         {label}
       </div>
-      <div className="text-[11px] text-[#005D45] whitespace-pre-line leading-relaxed">
+      <div className="text-[13px] text-[#005D45] whitespace-pre-line leading-relaxed">
         {value}
       </div>
     </div>

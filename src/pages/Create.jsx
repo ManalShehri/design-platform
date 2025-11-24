@@ -20,7 +20,7 @@ const TEMPLATES = {
     { name: "titleSecondary", label: "العنوان الفرعي", type: "text" },
     { name: "body", label: "النص التعريفي", type: "textarea" },
     { name: "image", label: "الصورة (مرفق)", type: "file" },
-    { name: "email", label: "البريد الإلكتروني", type: "text" },
+    // { name: "email", label: "البريد الإلكتروني", type: "text" },
     { name: "sourceLabel", label: "نص المصدر في الأسفل", type: "text" },
   ],
 
@@ -53,7 +53,7 @@ const TEMPLATES = {
     { name: "accessText", label: "وصف الوصول للخدمة", type: "text" },
 
     { name: "qrImage", label: "صورة الباركود", type: "file" },
-    { name: "email", label: "البريد الإلكتروني", type: "text" },
+    // { name: "email", label: "البريد الإلكتروني", type: "text" },
     { name: "sourceLabel", label: "نص المصدر في الأسفل", type: "text" },
   ],
 };
@@ -141,9 +141,9 @@ function getInitialData(template) {
     return {
       deptLine1: "",
       deptLine2: "",
-      inviteLine: "ندعوكم لحضور ورشة عمل عن بُعد",
-      audienceLine: "لتدريب منسوبي منظومة البيئة والمياه والزراعة",
-      systemLine: "على نظام جاهز",
+      inviteLine: "ندعوكـم لحـضور ورشة عمـل عن بُعـد",
+      audienceLine: "لـتدريـب منسـوبي مـنظومـة الـبيئـة والمـياه والـزراعـة",
+      systemLine: "على نظـام جاهـز",
       sourceLabel: "المصدر: الهيئة السعودية للبيانات والذكاء الاصطناعي",
       boxes: DEFAULT_INVITE_BOXES.map((b) => ({ ...b })),        // ٤ بوكسات
       agendaItems: DEFAULT_AGENDA_ITEMS.map((a) => ({ ...a })),  // ٤ محاور
@@ -154,7 +154,7 @@ function getInitialData(template) {
     return {
       deptLine1: "",
       deptLine2: "",
-      serviceTagline: "إطلاق خدمة إصدار",
+      serviceTagline: "إطـلاق خـدمة إصـدار",
       sourceLabel: "المصدر: الهيئة السعودية للبيانات والذكاء الاصطناعي",
       serviceTitle:
       "تـرخـيـص الـمـتـاجـر الإلـكـتـرونـيـة للأفـراد لـتـسـويـق الـمـنـتـجـات الـزراعـيـة",
@@ -289,31 +289,51 @@ export default function Create({ onBack }) {
   };
 
   /* ————— التصدير كـ PDF ————— */
+/* ————— التصدير كـ PDF بدون هوامش وبنفس حجم البوستر ————— */
   const exportPDF = async () => {
     if (!previewRef.current) return;
     setBusy(true);
     try {
-      const canvas = await html2canvas(previewRef.current, {
+      // تأكد من تحميل الخطوط قبل الالتقاط
+      if (document.fonts && document.fonts.ready) {
+        await document.fonts.ready;
+      }
+
+      const node = previewRef.current;
+      const parent = node.parentElement;
+
+      // لأن المعاينة مصغّرة بـ scale، نشيل الـ transform مؤقتاً
+      const oldTransform = parent.style.transform;
+      parent.style.transform = "none";
+
+      const width = node.offsetWidth;
+      const height = node.offsetHeight;
+
+      const canvas = await html2canvas(node, {
         scale: 2,
+        width,
+        height,
         backgroundColor: "#ffffff",
         useCORS: true,
       });
+
+      // نرجّع الـ transform مثل ما كان
+      parent.style.transform = oldTransform;
+
       const imgData = canvas.toDataURL("image/png");
-      const pdf = new jsPDF("p", "pt", "a4");
-      const pageWidth = pdf.internal.pageSize.getWidth();
-      const pageHeight = pdf.internal.pageSize.getHeight();
 
-      const ratio = canvas.width / canvas.height;
-      let w = pageWidth - 60;
-      let h = w / ratio;
-      if (h > pageHeight - 60) {
-        h = pageHeight - 60;
-        w = h * ratio;
-      }
-      const x = (pageWidth - w) / 2;
-      const y = (pageHeight - h) / 2;
+      // نستخدم نفس أبعاد الكانفس كحجم صفحة الـ PDF بالضبط
+      const pdfWidth = canvas.width;
+      const pdfHeight = canvas.height;
 
-      pdf.addImage(imgData, "PNG", x, y, w, h);
+      const pdf = new jsPDF({
+        orientation: pdfWidth >= pdfHeight ? "l" : "p",
+        unit: "px",                    // نشتغل بوحدة الـ px
+        format: [pdfWidth, pdfHeight], // نفس حجم الصورة
+      });
+
+      // نرسم الصورة من غير أي هوامش
+      pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
       pdf.save("poster.pdf");
     } finally {
       setBusy(false);
@@ -479,12 +499,12 @@ const enhanceText = async () => {
           <h2 className="text-2xl font-extrabold text-brand-800">
             إنشاء منشور جديد
           </h2>
-          <button
+          {/* <button
             onClick={onBack}
             className="text-sm px-3 py-2 rounded-lg bg-gray-100 hover:bg-gray-200"
           >
             الرجوع
-          </button>
+          </button> */}
         </div>
 
         {/* اختيار القالب */}
@@ -611,7 +631,7 @@ const enhanceText = async () => {
             <div className="mt-6 border-t pt-4 space-y-3">
               <div className="flex items-center justify-between">
                 <h3 className="font-bold text-brand-800 text-sm">
-                  المربعات  الخضراء (حتى 5)
+                  الأيقونات   (حتى 5)
                 </h3>
                 <button
                   type="button"
@@ -619,7 +639,7 @@ const enhanceText = async () => {
                   disabled={(inviteBoxes.length || 0) >= 5}
                   className="text-xs px-3 py-1 rounded-lg bg-brand-500 text-white disabled:opacity-40"
                 >
-                  + إضافة مربع
+                  + إضافة أيقونة
                 </button>
               </div>
 
@@ -630,7 +650,7 @@ const enhanceText = async () => {
                 >
                   <div className="flex items-center justify-between gap-2">
                     <span className="text-xs text-slate-600">
-                      مربع رقم {index + 1}
+                      أيقونة رقم {index + 1}
                     </span>
                     <button
                       type="button"
@@ -756,7 +776,7 @@ const enhanceText = async () => {
           <button
             onClick={enhanceText}
             disabled={busy}
-            className="mt-2 bg-brand-500 text-white font-semibold px-4 py-2 rounded-lg hover:brightness-110 disabled:opacity-60"
+            className="w-full mt-2 bg-brand-500 text-white font-semibold px-4 py-2 rounded-lg hover:brightness-110 disabled:opacity-60"
           >
             تحسين المحتوى
           </button>
@@ -765,18 +785,18 @@ const enhanceText = async () => {
         {/* بوكس التصدير */}
         <div className="mt-4 border rounded-xl p-4 bg-white shadow-card space-y-3">
           <h3 className="font-bold text-brand-800 text-sm">تصدير المنشور</h3>
-          <div className="flex flex-col gap-2 items-stretch md:items-end">
+          <div className="flex flex-col gap-2">
             <button
               onClick={exportPNG}
               disabled={busy}
-              className="bg-brand-500 text-white font-semibold py-2.5 px-4 rounded-xl hover:brightness-110 disabled:opacity-60 text-sm md:w-auto w-full"
+              className="w-full bg-brand-500 text-white font-semibold py-3 px-4 rounded-xl hover:brightness-110 disabled:opacity-60 text-sm"
             >
               تحميل كصورة (PNG)
             </button>
             <button
               onClick={exportPDF}
               disabled={busy}
-              className="bg-brand-900 text-white font-semibold py-2.5 px-4 rounded-xl hover:brightness-110 disabled:opacity-60 text-sm md:w-auto w-full"
+              className="w-full bg-brand-900 text-white font-semibold py-3 px-4 rounded-xl hover:brightness-110 disabled:opacity-60 text-sm"
             >
               تحميل PDF
             </button>

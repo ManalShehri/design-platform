@@ -13,8 +13,8 @@ const PORT = process.env.PORT || 3001;
 // ✅ تهيئة Gemini
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 // const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-light" });
-// const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+// const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-light" });
+const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
 
 // 👇 الحقول اللي نسمح للـ AI يعدلها لكل قالب
