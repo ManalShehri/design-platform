@@ -161,6 +161,10 @@ function getInitialData(template) {
       serviceBody:
         "تمكّن أصحاب المتاجر الإلكترونية من الأفراد السعوديين من تسويق المنتجات الزراعية ضمن إطار نظامي واضح، بما في ذلك منتجي المحاصيل الذين لديهم سجل زراعي أو من يتعاقد معهم لتسويق المنتجات الزراعية كمواد أولية أو معبأة.",
       serviceObjectives: DEFAULT_SERVICE_OBJECTIVES.map((o) => ({ ...o })), // أهداف افتراضية
+      launchDate : "17 نوفمبر 2025 م",
+      audience :"الأفراد",
+      qrLabel :"الوصول للخدمة",
+      accessText :"منصة نما للخدمات الإلكترونية" ,
     };
   }
 
@@ -341,17 +345,28 @@ export default function Create({ onBack }) {
   };
 
   /* ————— تحسين بالنص الذكي ————— */
+/* ————— تحسين بالنص الذكي ————— */
 const enhanceText = async () => {
   try {
     setBusy(true);
 
-    // نحدد أي الحقول نرسلها للـ AI
+    // نحدد القوالب اللي نفعّل لها التحسين
     let selectedFields = [];
+
     if (template === "تعريف بمنصة أو خدمة") {
+      // تحسين العنوان الرئيسي + الفرعي + النص التعريفي
       selectedFields = ["titlePrimary", "titleSecondary", "body"];
+    } else if (template === "دعوة ورشة عمل") {
+      // محاور الورشة (agendaItems) تتحسن في السيرفر مباشرة
+      selectedFields = [];
+    } else if (template === "إطلاق خدمة") {
+      // النص التعريفي + أهداف الخدمة تتحسن في السيرفر مباشرة
+      // (serviceBody + serviceObjectives)
+      selectedFields = [];
     } else {
-      // حالياً: لا نفعل شيء لباقي القوالب
-      alert("التحسين مفعّل حالياً لقالب تعريف بمنصة أو خدمة فقط.");
+      alert(
+        "التحسين مفعّل حالياً للقوالب: تعريف بمنصة أو خدمة، دعوة ورشة عمل، وإطلاق خدمة."
+      );
       setBusy(false);
       return;
     }
@@ -359,7 +374,13 @@ const enhanceText = async () => {
     const res = await fetch("http://localhost:3001/api/enhance", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ template, styleTone, keywords, formData, selectedFields }),
+      body: JSON.stringify({
+        template,
+        styleTone,
+        keywords,
+        formData,
+        selectedFields,
+      }),
     });
 
     if (!res.ok) {
@@ -373,9 +394,12 @@ const enhanceText = async () => {
     console.log("Enhance response:", json);
 
     if (json.enhanced) {
+      // لقالب إطلاق خدمة:
+      //  - لو رجع serviceBody محسّن → يندمج
+      //  - لو رجعت serviceObjectives محسّنة → تنعكس مباشرة في البوستر
       setFormData((d) => ({
         ...d,
-        ...json.enhanced, // يحدّث العنوان الرئيسي + الفرعي + النص
+        ...json.enhanced,
       }));
     }
   } catch (e) {

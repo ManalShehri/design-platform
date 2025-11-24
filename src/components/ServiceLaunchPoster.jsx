@@ -116,20 +116,20 @@ export default function ServiceLaunchPoster({ data }) {
             <InfoRow
               label="تاريخ الإطلاق"
               value={
-                launchDate || "17 نوفمبر 2025 م\n26 جمادى الأولى 1447 هـ"
+                launchDate 
               }
             />
             <InfoRow
               label="المستفيدون"
-              value={audience || "الأفراد"}
+              value={audience}
             />
             <div className="flex items-center justify-between gap-3">
               <div className="flex-1">
                 <div className="text-[12px] font-bold text-[#005D45] mb-1">
-                  {qrLabel || "الوصول للخدمة"}
+                  {qrLabel}
                 </div>
                 <div className="text-[11px] text-[#005D45] opacity-80">
-                  {accessText || "منصة نما للخدمات الإلكترونية"}
+                  {accessText}
                 </div>
               </div>
               <div className="w-16 h-16 bg-white rounded grid place-items-center overflow-hidden">
