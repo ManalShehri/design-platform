@@ -1,4 +1,7 @@
 // src/pages/Create.jsx
+// import { IconName } from "react-icons/ai";
+import { FiAlertTriangle, FiZap, FiPower, FiSlash } from "react-icons/fi";
+
 const ENHANCE_FIELDS_BY_TEMPLATE = {
   "تعريف بمنصة أو خدمة": ["titlePrimary", "titleSecondary", "body"],
   "دعوة ورشة عمل": ["inviteLine", "audienceLine", "systemLine"],
@@ -10,6 +13,7 @@ import jsPDF from "jspdf";
 import GeneralInfoPoster from "../components/GeneralInfoPoster.jsx";
 import WorkshopInvitePoster from "../components/WorkshopInvitePoster.jsx";
 import ServiceLaunchPoster from "../components/ServiceLaunchPoster.jsx";
+import SafetyPoster from "../components/SafetyPoster";
 
 /* ————— القوالب (الحقول) ————— */
 const TEMPLATES = {
@@ -56,6 +60,13 @@ const TEMPLATES = {
     // { name: "email", label: "البريد الإلكتروني", type: "text" },
     { name: "sourceLabel", label: "نص المصدر في الأسفل", type: "text" },
   ],
+  "قالب بخلفية صورة": [
+  { name: "mainTitle", label: "العنوان الرئيسي", type: "text" },
+  { name: "subTitle", label: "العنوان الفرعي", type: "textarea" },
+  { name: "mainImage", label: "الصورة الرئيسية", type: "file" },
+  { name: "sourceLabel", label: "نص المصدر في الأسفل", type: "text" },
+],
+
 };
 
 /* ——— ٤ بوكسات خضراء افتراضية ——— */
@@ -122,11 +133,26 @@ const DEFAULT_SERVICE_OBJECTIVES = [
   },
 ];
 
+// مجموعة الأيقونات المتاحة للاختيار في قالب الخلفية
+const SAFETY_ICON_OPTIONS = [
+  { key: "fire",     label: "حريق / تحذير",       preview: "⚠️" },
+  { key: "electric", label: "كهرباء / طاقة",      preview: "⚡" },
+  { key: "unplug",   label: "فصل الجهاز",         preview: "⏻" },
+  { key: "block",    label: "منع / تجنّب",        preview: "🚫" },
+  { key: "email",    label: "بريد إلكتروني",      preview: "✉️" },
+  { key: "bell",     label: "تنبيهات / إشعارات",  preview: "🔔" },
+  { key: "user",     label: "مستخدم / شخص",       preview: "👤" },
+  { key: "shield",   label: "حماية / أمن",        preview: "🛡️" },
+  { key: "info",     label: "معلومة",            preview: "ℹ️" },
+  { key: "check",    label: "تحقق / نجاح",        preview: "✅" },
+  // 👇 لاحقاً تقدرين تكملين حتى 35 عنصر براحتك
+];
 /* خريطة القوالب → مكوّن المعاينة */
 const previewByTemplate = {
   "تعريف بمنصة أو خدمة": (data) => <GeneralInfoPoster data={data} />,
   "دعوة ورشة عمل": (data) => <WorkshopInvitePoster data={data} />,
   "إطلاق خدمة": (data) => <ServiceLaunchPoster data={data} />,
+  "قالب بخلفية صورة": (data) => <SafetyPoster data={data} />,
 };
 
 function renderPreview(template, data) {
@@ -178,6 +204,23 @@ function getInitialData(template) {
       sourceLabel: "المصدر: الهيئة السعودية للبيانات والذكاء الاصطناعي",
     };
   }
+  
+if (template === "قالب بخلفية صورة") {
+  return {
+    mainTitle: "شتاك آمن",
+    subTitle:
+      "مع بداية فصل الشتاء، تكثر استخدامات المدافئ والأجهزة الكهربائية، وهنا تبرز أهمية الوعي بالسلامة لتجنب المخاطر والحفاظ على أمن الجميع.",
+    safetyItems: [
+      { id: 1, iconKey: "fire",     text: "ضع المدفأة بعيداً عن الستائر والمفروشات لتجنب الحريق." },
+      { id: 2, iconKey: "electric", text: "تأكد من سلامة التوصيلات الكهربائية قبل تشغيل أي جهاز." },
+      { id: 3, iconKey: "unplug",   text: "افصل الأجهزة عن الكهرباء عند النوم أو الخروج." },
+      { id: 4, iconKey: "block",    text: "تجنب تشغيل عدة أجهزة على توصيلة كهربائية واحدة." },
+    ],
+    sourceLabel: "المصدر: الإدارة العامة للأمن والسلامة المهنية",
+    mainImage: "/src/assets/مدفاه.png",
+  };
+}
+
 
   // باقي القوالب
   return {};
@@ -217,6 +260,11 @@ export default function Create({ onBack }) {
       ? Array.isArray(formData.serviceObjectives)
         ? formData.serviceObjectives
         : []
+      : [];
+
+  const safetyItems =
+    template === "قالب بخلفية صورة" && Array.isArray(formData.safetyItems)
+      ? formData.safetyItems
       : [];
 
   const previewRef = useRef(null);
@@ -500,6 +548,34 @@ const enhanceText = async () => {
     });
   };
 
+    /* ————— دوال عناصر السلامة (قالب بخلفية صورة) ————— */
+  const addSafetyItem = () => {
+    if (template !== "قالب بخلفية صورة") return;
+
+    setFormData((d) => {
+      const items = Array.isArray(d.safetyItems) ? [...d.safetyItems] : [];
+      if (items.length >= 4) return d; // حد أعلى ٤ بوكسات
+      items.push({ id: Date.now(), iconKey: "", text: "" });
+      return { ...d, safetyItems: items };
+    });
+  };
+
+  const updateSafetyItem = (index, field, value) => {
+    setFormData((d) => {
+      const items = Array.isArray(d.safetyItems) ? [...d.safetyItems] : [];
+      if (!items[index]) return d;
+      items[index] = { ...items[index], [field]: value };
+      return { ...d, safetyItems: items };
+    });
+  };
+
+  const removeSafetyItem = (index) => {
+    setFormData((d) => {
+      const items = Array.isArray(d.safetyItems) ? [...d.safetyItems] : [];
+      items.splice(index, 1);
+      return { ...d, safetyItems: items };
+    });
+  };
   // البيانات المرسلة للمعاينة
   let previewData = formData;
   if (template === "دعوة ورشة عمل") {
@@ -523,12 +599,12 @@ const enhanceText = async () => {
           <h2 className="text-2xl font-extrabold text-brand-800">
             إنشاء منشور جديد
           </h2>
-          {/* <button
+          <button
             onClick={onBack}
             className="text-sm px-3 py-2 rounded-lg bg-gray-100 hover:bg-gray-200"
           >
             الرجوع
-          </button> */}
+          </button>
         </div>
 
         {/* اختيار القالب */}
@@ -765,6 +841,73 @@ const enhanceText = async () => {
                     updateServiceObjective(index, e.target.value)
                   }
                 />
+              </div>
+            ))}
+          </div>
+        )}
+                {/* قالب بخلفية صورة: عناصر السلامة مع اختيار أيقونات */}
+        {template === "قالب بخلفية صورة" && (
+          <div className="mt-6 border-t pt-4 space-y-3">
+            <div className="flex items-center justify-between">
+              <h3 className="font-bold text-brand-800 text-sm">
+                عناصر البوستر (حتى 4)
+              </h3>
+              <button
+                type="button"
+                onClick={addSafetyItem}
+                disabled={(safetyItems.length || 0) >= 4}
+                className="text-xs px-3 py-1 rounded-lg bg-brand-500 text-white disabled:opacity-40"
+              >
+                + إضافة عنصر
+              </button>
+            </div>
+
+            {safetyItems.map((item, index) => (
+              <div
+                key={item.id || index}
+                className="border rounded-lg p-3 bg-slate-50 space-y-2"
+              >
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-xs text-slate-600">
+                    عنصر رقم {index + 1}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => removeSafetyItem(index)}
+                    className="text-[11px] text-red-500"
+                  >
+                    حذف
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-[minmax(0,1.2fr)_minmax(0,2fr)] gap-2">
+                  {/* اختيار الأيقونة من القائمة */}
+                  <select
+                    className="border rounded-lg px-2 py-2 text-xs"
+                    value={item.iconKey || ""}
+                    onChange={(e) =>
+                      updateSafetyItem(index, "iconKey", e.target.value)
+                    }
+                  >
+                    <option value="">اختر الأيقونة...</option>
+                    {SAFETY_ICON_OPTIONS.map((opt) => (
+                      <option key={opt.key} value={opt.key}>
+                        {opt.preview} {opt.label}
+                      </option>
+                    ))}
+                  </select>
+
+                  {/* نص العنصر */}
+                  <textarea
+                    rows={2}
+                    className="w-full border rounded-lg p-2 text-xs"
+                    placeholder="نص الإرشاد أو المعلومة..."
+                    value={item.text || ""}
+                    onChange={(e) =>
+                      updateSafetyItem(index, "text", e.target.value)
+                    }
+                  />
+                </div>
               </div>
             ))}
           </div>
