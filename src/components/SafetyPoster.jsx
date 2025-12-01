@@ -1,6 +1,7 @@
 // src/components/SafetyPoster.jsx
 import PosterHeader from "./PosterHeader.jsx";
 import PosterFooter from "./PosterFooter.jsx";
+import { ICONS_BY_KEY } from "../iconsConfig";
 import { 
   FiAlertTriangle, 
   FiZap, 
@@ -14,18 +15,18 @@ import {
   FiCheckCircle,
 } from "react-icons/fi";
 
-const ICONS_BY_KEY = {
-  fire: FiAlertTriangle,   // حريق
-  electric: FiZap,         // كهرباء
-  unplug: FiPower,         // فصل الكهرباء
-  block: FiSlash,          // منع / حظر
-  email: FiMail,           // بريد
-  bell: FiBell,            // إشعار
-  user: FiUser,            // مستخدم
-  shield: FiShield,        // حماية
-  info: FiInfo,            // معلومة
-  check: FiCheckCircle,    // تم / تحقق
-};
+// const ICONS_BY_KEY = {
+//   fire: FiAlertTriangle,   // حريق
+//   electric: FiZap,         // كهرباء
+//   unplug: FiPower,         // فصل الكهرباء
+//   block: FiSlash,          // منع / حظر
+//   email: FiMail,           // بريد
+//   bell: FiBell,            // إشعار
+//   user: FiUser,            // مستخدم
+//   shield: FiShield,        // حماية
+//   info: FiInfo,            // معلومة
+//   check: FiCheckCircle,    // تم / تحقق
+// };
 
 
 // ✅ بوكسات افتراضية لو ما جتنا safetyItems من Create
@@ -82,19 +83,6 @@ export default function SafetyPoster({ data }) {
     <div className="w-full min-h-[1273px] bg-[#F3FAF4] text-[#005D45] flex flex-col font-lina relative overflow-hidden">
       {/* ===== BACKGROUND IMAGE من أسفل البوستر ===== */}
       {mainImage && (
-
-        // <div className="absolute inset-x-0 bottom-0 h-[80%] pointer-events-none">
-        //   <div className="relative w-full h-full">
-        //     <img
-        //       src={mainImage}
-        //       alt=""
-        //       className="w-full h-full object-cover"
-        //     />
-        //     {/* تدرج من أسفل لأعلى: أسفل واضح، أعلى يختفي */}
-        //     <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#F3FAF4] via-[#F3FAF4]/60 to-transparent" />
-        //   </div>
-        // </div>
-
         <div className="absolute inset-x-0 bottom-0 h-[55%] pointer-events-none">
     <div className="relative w-full h-full">
       <img
@@ -133,22 +121,25 @@ export default function SafetyPoster({ data }) {
           </p>
 
         <section className="mt-16 mb-12 max-w-4xl w-full">
-            <div className="grid grid-cols-2 gap-x-10 gap-y-12 pb-90">
-               {finalSafetyItems.map((item, idx) => {
-                const IconComponent = ICONS_BY_KEY[item.iconKey] || FiAlertTriangle;
+          <div className="grid grid-cols-2 gap-x-10 gap-y-12">
+            {finalSafetyItems.map((item, idx) => {
+              const IconComponent = ICONS_BY_KEY[item.iconKey] || ICONS_BY_KEY.alert;
 
-                return (
-                    <div key={idx} className="flex flex-col items-center text-center">
-                    <div className="mb-3">
-                        <IconComponent className="w-12 h-12 text-[#46C752]" />
-                    </div>
-                    <p className="text-[20px] leading-relaxed text-[#005D45]">
-                        {item.text}
-                    </p>
-                    </div>
-                );
-                })}
-            </div>
+              return (
+                <div
+                  key={item.id || idx}
+                  className="flex flex-col items-center text-center"
+                >
+                  <div className="mb-3">
+                    <IconComponent className="w-10 h-10 text-[#46C752]" />
+                  </div>
+                  <p className="text-[18px] leading-relaxed text-[#005D45]">
+                    {item.text}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
         </section>
         </main>
 

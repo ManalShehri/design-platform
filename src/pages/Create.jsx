@@ -14,6 +14,7 @@ import GeneralInfoPoster from "../components/GeneralInfoPoster.jsx";
 import WorkshopInvitePoster from "../components/WorkshopInvitePoster.jsx";
 import ServiceLaunchPoster from "../components/ServiceLaunchPoster.jsx";
 import SafetyPoster from "../components/SafetyPoster";
+import { ICON_OPTIONS as SAFETY_ICON_OPTIONS } from "../iconsConfig";
 
 /* ————— القوالب (الحقول) ————— */
 const TEMPLATES = {
@@ -61,6 +62,8 @@ const TEMPLATES = {
     { name: "sourceLabel", label: "نص المصدر في الأسفل", type: "text" },
   ],
   "قالب بخلفية صورة": [
+  { name: "deptLine1", label: "الجهة الرئسية  (مسمى الوكالة)", type: "text" },
+  { name: "deptLine2", label: "الجهة الفرعية (إدارة عامة أو إدارة)", type: "text" },
   { name: "mainTitle", label: "العنوان الرئيسي", type: "text" },
   { name: "subTitle", label: "العنوان الفرعي", type: "textarea" },
   { name: "mainImage", label: "الصورة الرئيسية", type: "file" },
@@ -133,20 +136,6 @@ const DEFAULT_SERVICE_OBJECTIVES = [
   },
 ];
 
-// مجموعة الأيقونات المتاحة للاختيار في قالب الخلفية
-const SAFETY_ICON_OPTIONS = [
-  { key: "fire",     label: "حريق / تحذير",       preview: "⚠️" },
-  { key: "electric", label: "كهرباء / طاقة",      preview: "⚡" },
-  { key: "unplug",   label: "فصل الجهاز",         preview: "⏻" },
-  { key: "block",    label: "منع / تجنّب",        preview: "🚫" },
-  { key: "email",    label: "بريد إلكتروني",      preview: "✉️" },
-  { key: "bell",     label: "تنبيهات / إشعارات",  preview: "🔔" },
-  { key: "user",     label: "مستخدم / شخص",       preview: "👤" },
-  { key: "shield",   label: "حماية / أمن",        preview: "🛡️" },
-  { key: "info",     label: "معلومة",            preview: "ℹ️" },
-  { key: "check",    label: "تحقق / نجاح",        preview: "✅" },
-  // 👇 لاحقاً تقدرين تكملين حتى 35 عنصر براحتك
-];
 /* خريطة القوالب → مكوّن المعاينة */
 const previewByTemplate = {
   "تعريف بمنصة أو خدمة": (data) => <GeneralInfoPoster data={data} />,
@@ -165,8 +154,8 @@ function renderPreview(template, data) {
 function getInitialData(template) {
   if (template === "دعوة ورشة عمل") {
     return {
-      deptLine1: "",
-      deptLine2: "",
+      deptLine1: "وكالة الوزارة لتقنية المعلومات والتحول الرقمي",
+      deptLine2: "الإدارة العامة للتحول الرقمي",
       inviteLine: "ندعوكـم لحـضور ورشة عمـل عن بُعـد",
       audienceLine: "لـتدريـب منسـوبي مـنظومـة الـبيئـة والمـياه والـزراعـة",
       systemLine: "على نظـام جاهـز",
@@ -178,8 +167,8 @@ function getInitialData(template) {
 
   if (template === "إطلاق خدمة") {
     return {
-      deptLine1: "",
-      deptLine2: "",
+      deptLine1: "وكالة الوزارة لتقنية المعلومات والتحول الرقمي",
+      deptLine2: "الإدارة العامة للتحول الرقمي",
       serviceTagline: "إطـلاق خـدمة إصـدار",
       sourceLabel: "المصدر: الهيئة السعودية للبيانات والذكاء الاصطناعي",
       serviceTitle:
@@ -196,8 +185,8 @@ function getInitialData(template) {
 
   if (template === "تعريف بمنصة أو خدمة") {
     return {
-      deptLine1: "",
-      deptLine2: "",
+      deptLine1: "وكالة الوزارة لتقنية المعلومات والتحول الرقمي",
+      deptLine2: "الإدارة العامة للتحول الرقمي",
       titlePrimary: "نشرة الذكاء الاصطناعي",
       titleSecondary: "أهمية حماية البيانات في عصر الذكاء الاصطناعي",
       body: "تتزايد أهمية حماية الخصوصية والسرية في ظل الاستخدام المتنامي للذكاء الاصطناعي. من الضروري عدم مشاركة البيانات السرية مع أي جهة غير موثوقة، حيث يمكن أن تؤدي هذه الممارسات إلى انتهاك الخصوصية. بالإضافة إلى ذلك، يجب تجنب الاعتماد الكلي على تقنيات الذكاء الاصطناعي في اتخاذ القرارات، حيث إن ذلك قد يعرض البيانات الحساسة لمخاطر متعددة. لذا، ينبغي على الأفراد والمؤسسات اتخاذ تدابير فعالة لضمان حماية بياناتهم وضمان سريتها.",
@@ -207,6 +196,8 @@ function getInitialData(template) {
   
 if (template === "قالب بخلفية صورة") {
   return {
+    deptLine1: "الإدارة العامة للاتصال الموسسي والإعلام",
+    deptLine2: "إدارة التواصل الداخلي",
     mainTitle: "شتاك آمن",
     subTitle:
       "مع بداية فصل الشتاء، تكثر استخدامات المدافئ والأجهزة الكهربائية، وهنا تبرز أهمية الوعي بالسلامة لتجنب المخاطر والحفاظ على أمن الجميع.",
@@ -226,6 +217,28 @@ if (template === "قالب بخلفية صورة") {
   return {};
 }
 
+// ====== Text limit helper ======
+const MAX_CHARS = 400;
+const MAX_WORDS = 100;
+
+function limitText(value) {
+  if (!value) return value;
+
+  let text = value;
+
+  // 1) حد أقصى للحروف
+  if (text.length > MAX_CHARS) {
+    text = text.slice(0, MAX_CHARS);
+  }
+
+  // 2) حد أقصى للكلمات
+  const words = text.split(/\s+/);
+  if (words.length > MAX_WORDS) {
+    text = words.slice(0, MAX_WORDS).join(" ");
+  }
+
+  return text;
+}
 /* ————— Component الرئيسي ————— */
 
 export default function Create({ onBack }) {
@@ -236,8 +249,14 @@ export default function Create({ onBack }) {
     getInitialData("تعريف بمنصة أو خدمة")
   );
   const [busy, setBusy] = useState(false);
+  const [iconSearch, setIconSearch] = useState("");
 
+  // ✅ حالة لِلودينق الذكاء الاصطناعي + رسالة حالة
+  const [aiLoading, setAiLoading] = useState(false);     // لما الـ AI يشتغل
+  const [aiMessage, setAiMessage] = useState("");        // لعرض "جاري التحسين" أو "تم بنجاح"
   const fields = useMemo(() => TEMPLATES[template] ?? [], [template]);
+  // 🔍 بحث مخصص لكل عنصر سلامة (مفتاحه = item.id)
+  const [safetyIconSearch, setSafetyIconSearch] = useState({});
 
   // البوكسات لمحاذاة المعاينة (ورشة)
   const inviteBoxes =
@@ -267,6 +286,16 @@ export default function Create({ onBack }) {
       ? formData.safetyItems
       : [];
 
+  // ✅ الأيقونات بعد تطبيق البحث
+  const filteredIconOptions = SAFETY_ICON_OPTIONS.filter((opt) => {
+    const query = iconSearch.trim().toLowerCase();
+    if (!query) return true; // لو مافي بحث، رجّع الكل
+    return (
+      opt.label.toLowerCase().includes(query) ||
+      opt.key.toLowerCase().includes(query)
+    );
+  });
+
   const previewRef = useRef(null);
 
   // لما يتغير القالب → نضبط بيانات ابتدائية
@@ -289,7 +318,10 @@ export default function Create({ onBack }) {
       return;
     }
 
-    setFormData((d) => ({ ...d, [name]: value }));
+    // ✅ نطبّق الحد هنا لكل الحقول النصية
+    const limited = limitText(value);
+
+    setFormData((d) => ({ ...d, [name]: limited }));
   };
 
   const handleFileChange = (name, file) => {
@@ -393,29 +425,24 @@ export default function Create({ onBack }) {
   };
 
   /* ————— تحسين بالنص الذكي ————— */
-/* ————— تحسين بالنص الذكي ————— */
 const enhanceText = async () => {
   try {
-    setBusy(true);
+    // ✅ بداية التحسين: نفعّل اللودينق ونحط رسالة انتظار
+    setAiLoading(true);
+    setAiMessage("جاري تحسين المحتوى بالذكاء الاصطناعي...");
 
-    // نحدد القوالب اللي نفعّل لها التحسين
     let selectedFields = [];
 
     if (template === "تعريف بمنصة أو خدمة") {
-      // تحسين العنوان الرئيسي + الفرعي + النص التعريفي
       selectedFields = ["titlePrimary", "titleSecondary", "body"];
     } else if (template === "دعوة ورشة عمل") {
-      // محاور الورشة (agendaItems) تتحسن في السيرفر مباشرة
       selectedFields = [];
     } else if (template === "إطلاق خدمة") {
-      // النص التعريفي + أهداف الخدمة تتحسن في السيرفر مباشرة
-      // (serviceBody + serviceObjectives)
       selectedFields = [];
     } else {
-      alert(
+      setAiMessage(
         "التحسين مفعّل حالياً للقوالب: تعريف بمنصة أو خدمة، دعوة ورشة عمل، وإطلاق خدمة."
       );
-      setBusy(false);
       return;
     }
 
@@ -434,7 +461,7 @@ const enhanceText = async () => {
     if (!res.ok) {
       const errJson = await res.json().catch(() => ({}));
       console.error("Enhance error HTTP:", errJson);
-      alert("تعذر تحسين النص (مشكلة من الخادم).");
+      setAiMessage("تعذر تحسين النص (مشكلة من الخادم).");
       return;
     }
 
@@ -442,19 +469,22 @@ const enhanceText = async () => {
     console.log("Enhance response:", json);
 
     if (json.enhanced) {
-      // لقالب إطلاق خدمة:
-      //  - لو رجع serviceBody محسّن → يندمج
-      //  - لو رجعت serviceObjectives محسّنة → تنعكس مباشرة في البوستر
       setFormData((d) => ({
         ...d,
         ...json.enhanced,
       }));
+
+      // ✅ هنا نعرض رسالة نجاح
+      setAiMessage("تم تحسين المحتوى بنجاح");
+    } else {
+      setAiMessage("لم يتم استلام محتوى محسّن من الخادم.");
     }
   } catch (e) {
     console.error("Enhance exception:", e);
-    alert("تعذر تحسين النص الآن (مشكلة اتصال).");
+    setAiMessage("تعذر تحسين النص الآن (مشكلة اتصال).");
   } finally {
-    setBusy(false);
+    // ✅ انتهاء التحسين: نوقف اللودينق
+    setAiLoading(false);
   }
 };
 
@@ -473,7 +503,7 @@ const enhanceText = async () => {
     setFormData((d) => {
       const boxes = Array.isArray(d.boxes) ? [...d.boxes] : [];
       if (!boxes[index]) return d;
-      boxes[index] = { ...boxes[index], [field]: value };
+      boxes[index] = { ...boxes[index], [field]: limitText(value) }; // ✅
       return { ...d, boxes };
     });
   };
@@ -501,7 +531,7 @@ const enhanceText = async () => {
     setFormData((d) => {
       const items = Array.isArray(d.agendaItems) ? [...d.agendaItems] : [];
       if (!items[index]) return d;
-      items[index] = { ...items[index], [field]: value };
+      items[index] = { ...items[index], [field]: limitText(value) }; // ✅
       return { ...d, agendaItems: items };
     });
   };
@@ -533,7 +563,7 @@ const enhanceText = async () => {
         ? [...d.serviceObjectives]
         : [];
       if (!items[index]) return d;
-      items[index] = { ...items[index], text: value };
+      items[index] = { ...items[index], text: limitText(value) }; // ✅
       return { ...d, serviceObjectives: items };
     });
   };
@@ -564,7 +594,14 @@ const enhanceText = async () => {
     setFormData((d) => {
       const items = Array.isArray(d.safetyItems) ? [...d.safetyItems] : [];
       if (!items[index]) return d;
-      items[index] = { ...items[index], [field]: value };
+
+      // iconKey ما يحتاج حد نص طويل، لكن نطبق على النص
+      if (field === "text") {
+        items[index] = { ...items[index], [field]: limitText(value) };
+      } else {
+        items[index] = { ...items[index], [field]: value };
+      }
+
       return { ...d, safetyItems: items };
     });
   };
@@ -590,6 +627,20 @@ const enhanceText = async () => {
       serviceObjectives,
     };
   }
+
+    // 🧠 دالة صغيرة لتصفية الأيقونات حسب البحث
+  const filterIconOptions = (searchTerm) => {
+    if (!searchTerm) return SAFETY_ICON_OPTIONS;
+
+    const s = searchTerm.trim().toLowerCase();
+    return SAFETY_ICON_OPTIONS.filter((opt) => {
+      return (
+        opt.label.toLowerCase().includes(s) ||
+        opt.key.toLowerCase().includes(s) ||
+        (opt.category && opt.category.toLowerCase().includes(s))
+      );
+    });
+  };
 
   return (
     <div className="max-w-6xl mx-auto px-4 md:px-6 py-6 grid md:grid-cols-[420px_minmax(0,1fr)] gap-6">
@@ -862,56 +913,80 @@ const enhanceText = async () => {
               </button>
             </div>
 
-            {safetyItems.map((item, index) => (
-              <div
-                key={item.id || index}
-                className="border rounded-lg p-3 bg-slate-50 space-y-2"
-              >
-                <div className="flex items-center justify-between gap-2">
-                  <span className="text-xs text-slate-600">
-                    عنصر رقم {index + 1}
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => removeSafetyItem(index)}
-                    className="text-[11px] text-red-500"
-                  >
-                    حذف
-                  </button>
-                </div>
+            {safetyItems.map((item, index) => {
+              const searchTerm = safetyIconSearch[item.id] || "";
+              const filteredOptions = filterIconOptions(searchTerm);
 
-                <div className="grid grid-cols-1 md:grid-cols-[minmax(0,1.2fr)_minmax(0,2fr)] gap-2">
-                  {/* اختيار الأيقونة من القائمة */}
-                  <select
-                    className="border rounded-lg px-2 py-2 text-xs"
-                    value={item.iconKey || ""}
-                    onChange={(e) =>
-                      updateSafetyItem(index, "iconKey", e.target.value)
-                    }
-                  >
-                    <option value="">اختر الأيقونة...</option>
-                    {SAFETY_ICON_OPTIONS.map((opt) => (
-                      <option key={opt.key} value={opt.key}>
-                        {opt.preview} {opt.label}
-                      </option>
-                    ))}
-                  </select>
+              return (
+                <div
+                  key={item.id || index}
+                  className="border rounded-lg p-3 bg-slate-50 space-y-2"
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-xs text-slate-600">
+                      عنصر رقم {index + 1}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => removeSafetyItem(index)}
+                      className="text-[11px] text-red-500"
+                    >
+                      حذف
+                    </button>
+                  </div>
 
-                  {/* نص العنصر */}
-                  <textarea
-                    rows={2}
-                    className="w-full border rounded-lg p-2 text-xs"
-                    placeholder="نص الإرشاد أو المعلومة..."
-                    value={item.text || ""}
-                    onChange={(e) =>
-                      updateSafetyItem(index, "text", e.target.value)
-                    }
-                  />
+                  <div className="grid grid-cols-1 md:grid-cols-[minmax(0,1.5fr)_minmax(0,2fr)] gap-2">
+                    {/* 🔍 حقل بحث عن الأيقونة */}
+                    <div className="space-y-1">
+                      <input
+                        className="w-full border rounded-lg px-2 py-1 text-xs"
+                        placeholder="ابحث عن الأيقونة (مثال: سلامة، بريد، أمن...)"
+                        value={searchTerm}
+                        onChange={(e) =>
+                          setSafetyIconSearch((prev) => ({
+                            ...prev,
+                            [item.id]: e.target.value,
+                          }))
+                        }
+                      />
+
+                      {/* اختيار الأيقونة من القائمة المفلترة */}
+                      <select
+                        className="w-full border rounded-lg px-2 py-2 text-xs"
+                        value={item.iconKey || ""}
+                        onChange={(e) =>
+                          updateSafetyItem(index, "iconKey", e.target.value)
+                        }
+                      >
+                        <option value="">اختر الأيقونة...</option>
+                        {filteredOptions.map((opt) => (
+                          <option key={opt.key} value={opt.key}>
+                            {opt.preview} {opt.label}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    {/* نص العنصر */}
+                    <textarea
+                      rows={2}
+                      className="w-full border rounded-lg p-2 text-xs"
+                      placeholder="نص الإرشاد أو المعلومة..."
+                      value={item.text || ""}
+                      onChange={(e) =>
+                        updateSafetyItem(index, "text", e.target.value)
+                      }
+                    />
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
+
+
+
+
 
         {/* AI تحسين */}
         <div className="mt-6 border rounded-xl p-4 bg-slate-50 space-y-3">
@@ -940,13 +1015,19 @@ const enhanceText = async () => {
               />
             </div>
           </div>
-          <button
+         <button
             onClick={enhanceText}
-            disabled={busy}
-            className="w-full mt-2 bg-brand-500 text-white font-semibold px-4 py-2 rounded-lg hover:brightness-110 disabled:opacity-60"
+            disabled={busy || aiLoading}   // ❗ يتعطّل لو التصدير شغال أو الـ AI شغال
+            className="w-full mt-2 bg-brand-500 text-white font-semibold px-4 py-2 rounded-lg hover:brightness-110 disabled:opacity-60 flex items-center justify-center gap-2"
           >
-            تحسين المحتوى
+            {aiLoading ? "جاري التحسين..." : "تحسين المحتوى"}
           </button>
+          {/* رسالة حالة الذكاء الاصطناعي */}
+          {aiMessage && (
+            <p className="mt-2 text-xs text-slate-600">
+              {aiMessage}
+            </p>
+          )}
         </div>
 
         {/* بوكس التصدير */}
