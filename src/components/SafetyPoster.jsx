@@ -2,32 +2,6 @@
 import PosterHeader from "./PosterHeader.jsx";
 import PosterFooter from "./PosterFooter.jsx";
 import { ICONS_BY_KEY } from "../iconsConfig";
-import { 
-  FiAlertTriangle, 
-  FiZap, 
-  FiPower, 
-  FiSlash,
-  FiMail,
-  FiBell,
-  FiUser,
-  FiShield,
-  FiInfo,
-  FiCheckCircle,
-} from "react-icons/fi";
-
-// const ICONS_BY_KEY = {
-//   fire: FiAlertTriangle,   // حريق
-//   electric: FiZap,         // كهرباء
-//   unplug: FiPower,         // فصل الكهرباء
-//   block: FiSlash,          // منع / حظر
-//   email: FiMail,           // بريد
-//   bell: FiBell,            // إشعار
-//   user: FiUser,            // مستخدم
-//   shield: FiShield,        // حماية
-//   info: FiInfo,            // معلومة
-//   check: FiCheckCircle,    // تم / تحقق
-// };
-
 
 // ✅ بوكسات افتراضية لو ما جتنا safetyItems من Create
 const defaultSafetyItems = [

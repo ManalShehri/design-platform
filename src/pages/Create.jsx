@@ -19,9 +19,9 @@ import { ICON_OPTIONS as SAFETY_ICON_OPTIONS } from "../iconsConfig";
 /* ————— القوالب (الحقول) ————— */
 const TEMPLATES = {
   "تعريف بمنصة أو خدمة": [
-    { name: "deptLine1", label: "الجهة الرئسية  (مسمى الوكالة)", type: "text" },
-    { name: "deptLine2", label: "الجهة الفرعية (إدارة عامة أو إدارة)", type: "text" },
-    { name: "titlePrimary", label: "العنوان الرئيسي", type: "text" },
+    { name: "deptLine1", label: "الجهة الرئسية  (مسمى الوكالة)*", type: "text" },
+    { name: "deptLine2", label: "الجهة الفرعية (إدارة عامة أو إدارة)*", type: "text" },
+    { name: "titlePrimary", label: "العنوان الرئيسي*", type: "text" },
     { name: "titleSecondary", label: "العنوان الفرعي", type: "text" },
     { name: "body", label: "النص التعريفي", type: "textarea" },
     { name: "image", label: "الصورة (مرفق)", type: "file" },
@@ -30,8 +30,8 @@ const TEMPLATES = {
   ],
 
   "دعوة ورشة عمل": [
-    { name: "deptLine1", label: "الجهة الرئسية  (مسمى الوكالة)", type: "text" },
-    { name: "deptLine2", label: "الجهة الفرعية (إدارة عامة أو إدارة)", type: "text" },
+    { name: "deptLine1", label: "الجهة الرئسية  (مسمى الوكالة)*", type: "text" },
+    { name: "deptLine2", label: "الجهة الفرعية (إدارة عامة أو إدارة)*", type: "text" },
 
     { name: "inviteLine", label: "نص الدعوة الرئيسي", type: "text" },
     { name: "audienceLine", label: "نص الدعوة الفرعي", type: "text" },
@@ -41,10 +41,10 @@ const TEMPLATES = {
   ],
 
   "إطلاق خدمة": [
-    { name: "deptLine1", label: "الجهة الرئسية  (مسمى الوكالة)", type: "text" },
-    { name: "deptLine2", label: "الجهة الفرعية (إدارة عامة أو إدارة)", type: "text" },
+    { name: "deptLine1", label: "الجهة الرئسية  (مسمى الوكالة)*", type: "text" },
+    { name: "deptLine2", label: "الجهة الفرعية (إدارة عامة أو إدارة)*", type: "text" },
 
-    { name: "serviceTagline", label: "العنوان الرئيسي ", type: "text" },
+    { name: "serviceTagline", limitTextlabel: "العنوان الرئيسي ", type: "text" },
     { name: "serviceTitle", label: "عنوان الخدمة الرئيسي", type: "text" },
     { name: "serviceBody", label: "النص التعريفي", type: "textarea" },
 
@@ -62,8 +62,8 @@ const TEMPLATES = {
     { name: "sourceLabel", label: "نص المصدر في الأسفل", type: "text" },
   ],
   "قالب بخلفية صورة": [
-  { name: "deptLine1", label: "الجهة الرئسية  (مسمى الوكالة)", type: "text" },
-  { name: "deptLine2", label: "الجهة الفرعية (إدارة عامة أو إدارة)", type: "text" },
+  { name: "deptLine1", label: "الجهة الرئسية  (مسمى الوكالة)*", type: "text" },
+  { name: "deptLine2", label: "الجهة الفرعية (إدارة عامة أو إدارة)*", type: "text" },
   { name: "mainTitle", label: "العنوان الرئيسي", type: "text" },
   { name: "subTitle", label: "العنوان الفرعي", type: "textarea" },
   { name: "mainImage", label: "الصورة الرئيسية", type: "file" },
@@ -77,25 +77,25 @@ const DEFAULT_INVITE_BOXES = [
   {
     id: 1,
     label: "التاريخ",
-    icon: "📅",
+    iconKey: "calendar", // لازم يكون موجود في iconsConfig
     text: "الثلاثاء 11/11/2025",
   },
   {
     id: 2,
     label: "الوقت",
-    icon: "⏰",
+    iconKey: "time",
     text: "من 10:30 ص إلى 11:30 ص",
   },
   {
     id: 3,
     label: "الفئة المستهدفة",
-    icon: "👥",
+    iconKey: "users",
     text: "منسوبو منظومة البيئة والمياه والزراعة",
   },
   {
     id: 4,
     label: "الباركود",
-    icon: "📎",
+    iconKey: "qrcode",
     text: "للانضمام للورشة يمكن مسح الباركود",
   },
 ];
@@ -221,20 +221,22 @@ if (template === "قالب بخلفية صورة") {
 const MAX_CHARS = 400;
 const MAX_WORDS = 100;
 
-function limitText(value) {
+// ====== Text limit helper (ديناميكي حسب القيم) ======
+function limitText(value, { maxChars, maxWords } = {}) {
   if (!value) return value;
-
   let text = value;
 
-  // 1) حد أقصى للحروف
-  if (text.length > MAX_CHARS) {
-    text = text.slice(0, MAX_CHARS);
+  // حد أقصى للحروف
+  if (maxChars && text.length > maxChars) {
+    text = text.slice(0, maxChars);
   }
 
-  // 2) حد أقصى للكلمات
-  const words = text.split(/\s+/);
-  if (words.length > MAX_WORDS) {
-    text = words.slice(0, MAX_WORDS).join(" ");
+  // حد أقصى للكلمات
+  if (maxWords) {
+    const words = text.split(/\s+/);
+    if (words.length > maxWords) {
+      text = words.slice(0, maxWords).join(" ");
+    }
   }
 
   return text;
@@ -257,6 +259,7 @@ export default function Create({ onBack }) {
   const fields = useMemo(() => TEMPLATES[template] ?? [], [template]);
   // 🔍 بحث مخصص لكل عنصر سلامة (مفتاحه = item.id)
   const [safetyIconSearch, setSafetyIconSearch] = useState({});
+  const [workshopIconSearch, setWorkshopIconSearch] = useState({});
 
   // البوكسات لمحاذاة المعاينة (ورشة)
   const inviteBoxes =
@@ -318,8 +321,25 @@ export default function Create({ onBack }) {
       return;
     }
 
-    // ✅ نطبّق الحد هنا لكل الحقول النصية
-    const limited = limitText(value);
+    // 🎯 هنا تحددين الليمت حسب نوع الحقل
+    let limits = {};
+
+    // نصوص رئيسية طويلة (فقرات)
+    if (["body", "serviceBody", "subTitle"].includes(name)) {
+      limits = { maxChars: 500, maxWords: 90 }; // غيّري الأرقام براحتك
+    }
+    // عناوين رئيسية / فرعية
+    else if (
+      ["titlePrimary", "titleSecondary", "serviceTagline", "serviceTitle", "mainTitle"].includes(name)
+    ) {
+      limits = { maxChars: 120, maxWords: 20 };
+    }
+    // نص المصدر أو حقول أخرى
+    else {
+      limits = { maxChars: 200, maxWords: 35 };
+    }
+
+    const limited = limitText(value, limits);
 
     setFormData((d) => ({ ...d, [name]: limited }));
   };
@@ -494,7 +514,7 @@ const enhanceText = async () => {
     setFormData((d) => {
       const boxes = Array.isArray(d.boxes) ? [...d.boxes] : [];
       if (boxes.length >= 5) return d;
-      boxes.push({ id: Date.now(), label: "", text: "", icon: "" });
+      boxes.push({ id: Date.now(), label: "", text: "", iconKey: "" });
       return { ...d, boxes };
     });
   };
@@ -503,7 +523,16 @@ const enhanceText = async () => {
     setFormData((d) => {
       const boxes = Array.isArray(d.boxes) ? [...d.boxes] : [];
       if (!boxes[index]) return d;
-      boxes[index] = { ...boxes[index], [field]: limitText(value) }; // ✅
+
+      let v = value;
+
+      if (field === "label") {
+        v = limitText(value, { maxChars: 80, maxWords: 10 });
+      } else if (field === "text") {
+        v = limitText(value, { maxChars: 220, maxWords: 40 });
+      }
+
+      boxes[index] = { ...boxes[index], [field]: v };
       return { ...d, boxes };
     });
   };
@@ -654,7 +683,7 @@ const enhanceText = async () => {
             onClick={onBack}
             className="text-sm px-3 py-2 rounded-lg bg-gray-100 hover:bg-gray-200"
           >
-            الرجوع
+            الرئيسية
           </button>
         </div>
 
@@ -794,7 +823,11 @@ const enhanceText = async () => {
                 </button>
               </div>
 
-              {inviteBoxes.map((box, index) => (
+            {inviteBoxes.map((box, index) => {
+              const searchTerm = workshopIconSearch[box.id] || "";
+              const filteredOptions = filterIconOptions(searchTerm);
+
+              return (
                 <div
                   key={box.id || index}
                   className="border rounded-lg p-3 bg-slate-50 space-y-2"
@@ -812,38 +845,60 @@ const enhanceText = async () => {
                     </button>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-2">
-                    <input
-                      type="text"
-                      className="border rounded-lg px-2 py-1 text-xs"
-                      placeholder=" العنوان (مثال: التاريخ)"
-                      value={box.label || ""}
+                  {/* العنوان */}
+                  <input
+                    type="text"
+                    className="border rounded-lg px-2 py-1 text-xs w-full"
+                    placeholder="العنوان (مثال: التاريخ)"
+                    value={box.label || ""}
+                    onChange={(e) => updateBox(index, "label", e.target.value)}
+                  />
+
+                  <div className="grid grid-cols-1 md:grid-cols-[minmax(0,1.5fr)_minmax(0,2fr)] gap-2">
+                    {/* 🔍 بحث + قائمة الأيقونات */}
+                    <div className="space-y-1">
+                      <input
+                        className="w-full border rounded-lg px-2 py-1 text-xs"
+                        placeholder="ابحث عن الأيقونة (وقت، تاريخ، بريد، أمن...)"
+                        value={searchTerm}
+                        onChange={(e) =>
+                          setWorkshopIconSearch((prev) => ({
+                            ...prev,
+                            [box.id]: e.target.value,
+                          }))
+                        }
+                      />
+
+                      <select
+                        className="w-full border rounded-lg px-2 py-2 text-xs"
+                        value={box.iconKey || ""}
+                        onChange={(e) =>
+                          updateBox(index, "iconKey", e.target.value)
+                        }
+                      >
+                        <option value="">اختر الأيقونة...</option>
+                        {filteredOptions.map((opt) => (
+                          <option key={opt.key} value={opt.key}>
+                            {opt.preview} {opt.label}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    {/* نص البوكس */}
+                    <textarea
+                      rows={2}
+                      className="w-full border rounded-lg p-2 text-xs"
+                      placeholder="النص ..."
+                      value={box.text || ""}
                       onChange={(e) =>
-                        updateBox(index, "label", e.target.value)
-                      }
-                    />
-                    <input
-                      type="text"
-                      className="border rounded-lg px-2 py-1 text-xs"
-                      placeholder="عنوان فرعي أو أيقونة (مثال: 📅)"
-                      value={box.icon || ""}
-                      onChange={(e) =>
-                        updateBox(index, "icon", e.target.value)
+                        updateBox(index, "text", e.target.value)
                       }
                     />
                   </div>
-
-                  <textarea
-                    rows={3}
-                    className="w-full border rounded-lg p-2 text-xs"
-                    placeholder="النص ..."
-                    value={box.text || ""}
-                    onChange={(e) =>
-                      updateBox(index, "text", e.target.value)
-                    }
-                  />
                 </div>
-              ))}
+              );
+            })}
             </div>
           </>
         )}
@@ -991,6 +1046,7 @@ const enhanceText = async () => {
         {/* AI تحسين */}
         <div className="mt-6 border rounded-xl p-4 bg-slate-50 space-y-3">
           <h3 className="font-bold text-brand-800">التحسين بالذكاء الاصطناعي</h3>
+          <p className="text-accent-brown"> الرجاء التأكد من عدم مشاركة بيانات سرية في حال رغبتك في تفعيل التحسين بالذكاء الاصطناعي</p>
           <div className="grid md:grid-cols-2 gap-3">
             <div>
               <label className="block text-sm font-semibold">الأسلوب</label>

@@ -1,6 +1,7 @@
 // src/components/WorkshopInvitePoster.jsx
 import PosterHeader from "./PosterHeader.jsx";
 import PosterFooter from "./PosterFooter.jsx";
+import { ICONS_BY_KEY } from "../iconsConfig"; 
 
 export default function WorkshopInvitePoster({ data }) {
   const {
@@ -32,35 +33,17 @@ export default function WorkshopInvitePoster({ data }) {
     workshopImage,
   } = data;
 
-  // 🔹 تجهيز محاور الورشة:
-  // لو فيه agendaItems من النموذج → نستخدمها (حد أقصى 6)
-  // لو لا → نرجع للمحاور الأربعة الافتراضية الموجودة الآن
+  // 🔹 تجهيز محاور الورشة
   const fallbackAgenda = [
-    {
-      title: agenda1Title,
-      body:
-        agenda1Body,
-    },
-    {
-      title: agenda2Title,
-      body:
-        agenda2Body,
-    },
-    {
-      title: agenda3Title,
-      body:
-        agenda3Body,
-    },
-    {
-      title: agenda4Title,
-      body:
-        agenda4Body,
-    },
+    { title: agenda1Title, body: agenda1Body },
+    { title: agenda2Title, body: agenda2Body },
+    { title: agenda3Title, body: agenda3Body },
+    { title: agenda4Title, body: agenda4Body },
   ];
 
   const finalAgenda =
     Array.isArray(agendaItems) && agendaItems.length > 0
-      ? agendaItems.slice(0, 6) // ٢ إلى ٦ عناصر
+      ? agendaItems.slice(0, 6)
       : fallbackAgenda;
 
   return (
@@ -69,7 +52,7 @@ export default function WorkshopInvitePoster({ data }) {
         logoUrl={logoUrl}
         deptLine1={deptLine1}
         deptLine2={deptLine2}
-        accentColor="#629FFC" // الأزرق الطويل
+        accentColor="#629FFC"
         variant="short-bar"
       />
 
@@ -90,7 +73,7 @@ export default function WorkshopInvitePoster({ data }) {
           </p>
         </section>
 
-        {/* أجندة الورشة – نفس التصميم، لكن ديناميكي حتى ٦ محاور */}
+        {/* أجندة الورشة – ديناميكي حتى ٦ محاور */}
         <section className="w-full max-w-4xl bg-[#EAF5EC] rounded-3xl px-10 py-8 mb-10">
           <h3 className="text-[32px] font-bold text-[#005D45] mb-4">
             محاور الورشة:
@@ -103,7 +86,7 @@ export default function WorkshopInvitePoster({ data }) {
           </div>
         </section>
 
-        {/* صورة تحت محاور الورشة */}
+        {/* صورة اختيارية تحت محاور الورشة */}
         {workshopImage && (
           <section className="w-full max-w-3xl mx-auto mt-10 mb-10">
             <div className="rounded-2xl shadow-md overflow-hidden bg-white p-2">
@@ -133,13 +116,12 @@ export default function WorkshopInvitePoster({ data }) {
 /* ————— توزيع البوكسات الخضراء ————— */
 
 function BoxesSection({ boxes }) {
-  // لا أكثر من 5
   const limited = boxes.slice(0, 5);
   const count = limited.length;
 
   if (count === 0) return null;
 
-  // ✅ حالة 1–4 بوكسات: كلها في سطر واحد في المنتصف
+  // 1–4 بوكسات: صف واحد في المنتصف
   if (count <= 4) {
     return (
       <section className="w-full max-w-4xl mx-auto mt-4 mb-8">
@@ -152,9 +134,9 @@ function BoxesSection({ boxes }) {
     );
   }
 
-  // ✅ حالة 5 بوكسات: 3 فوق + 2 تحت، وكل صف في المنتصف
-  const firstRow = limited.slice(0, 3); // 0,1,2
-  const secondRow = limited.slice(3); // 3,4
+  // 5 بوكسات: 3 فوق + 2 تحت
+  const firstRow = limited.slice(0, 3);
+  const secondRow = limited.slice(3);
 
   return (
     <section className="w-full max-w-4xl mx-auto mt-4 mb-8">
@@ -183,7 +165,6 @@ function BoxesSection({ boxes }) {
 function AgendaItem({ title, body }) {
   return (
     <div className="bg-white/70 rounded-2xl px-4 py-4 h-full shadow-sm">
-      {/* الشريط الأصفر */}
       <div className="w-10 h-1.5 bg-[#FFC629] rounded-full mb-3" />
       <h4 className="text-[20px] font-bold text-[#005D45] mb-2">{title}</h4>
       <p className="text-[15px] text-[#005D45] leading-relaxed">{body}</p>
@@ -192,10 +173,22 @@ function AgendaItem({ title, body }) {
 }
 
 function DynamicBox({ box, index }) {
+  // 🔑 نجيب الأيقونة من iconsConfig باستخدام iconKey
+  const IconComp = box.iconKey && ICONS_BY_KEY[box.iconKey];
+
   return (
     <div className="bg-[#005D45] rounded-2xl px-4 py-4 text-white flex flex-col items-center text-center gap-2 w-[190px] min-h-[120px]">
       <div className="flex flex-col items-center gap-1">
-        <span className="text-[14px]">{box.icon }</span>
+        {/* الأيقونة – React icon أو fallback للنص القديم */}
+        <span className="text-[18px] flex items-center justify-center mb-1">
+          {IconComp ? (
+            // React-icons تستخدم currentColor → في هذا البوكس هي white
+            <IconComp className="w-5 h-5" />
+          ) : (
+            (box.icon)
+          )}
+        </span>
+
         <span className="text-[12px] font-bold">
           {box.label || `المربع ${index + 1}`}
         </span>
@@ -216,7 +209,8 @@ function InfoBox({ label, value }) {
     <div className="bg-[#005D45] rounded-2xl px-3 py-3 text-center text-white flex flex-col items-center justify-center">
       <div className="text-[11px] opacity-80 mb-1">{label}</div>
       <div className="text-[12px] font-semibold leading-snug whitespace-pre-line">
-        {value}</div>
+        {value}
+      </div>
     </div>
   );
 }
