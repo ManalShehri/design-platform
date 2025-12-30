@@ -1,6 +1,6 @@
 // src/components/ServiceLaunchPoster.jsx
-import PosterHeader from "./PosterHeader.jsx";
-import PosterFooter from "./PosterFooter.jsx";
+import PosterHeader from "./Utl/PosterHeader.jsx";
+import PosterFooter from "./Utl/PosterFooter.jsx";
 
 export default function ServiceLaunchPoster({ data }) {
   const {

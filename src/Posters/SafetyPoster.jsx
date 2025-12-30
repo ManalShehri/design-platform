@@ -1,6 +1,6 @@
 // src/components/SafetyPoster.jsx
-import PosterHeader from "./PosterHeader.jsx";
-import PosterFooter from "./PosterFooter.jsx";
+import PosterHeader from "./Utl/PosterHeader.jsx";
+import PosterFooter from "./Utl/PosterFooter.jsx";
 import { ICONS_BY_KEY } from "../iconsConfig";
 
 // ✅ بوكسات افتراضية لو ما جتنا safetyItems من Create

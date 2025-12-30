@@ -1,5 +1,5 @@
 // src/components/ExecutiveSummaryPoster.jsx
-import PosterFooter from "./PosterFooter.jsx";
+import PosterFooter from "./Utl/PosterFooter.jsx";
 
 export default function ExecutiveSummaryPoster({ data }) {
   const {

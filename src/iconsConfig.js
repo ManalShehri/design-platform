@@ -173,7 +173,6 @@ export const ICON_OPTIONS = [
 
 ];
 
-
 export const ICONS_BY_KEY = {
   alert: FiAlertTriangle,
   warning: AiOutlineWarning,
@@ -227,40 +226,40 @@ export const ICONS_BY_KEY = {
   cpu: FiCpu,
   audio: AiFillAudio,
   
-clock: FiClock,
-mic:FiMic,
-user2:FiUser,
+  clock: FiClock,
+  mic:FiMic,
+  user2:FiUser,
 
-clockcircle:AiOutlineClockCircle,
-audio2:AiTwotoneAudio,
-warning2:AiTwotoneWarning,
+  clockcircle:AiOutlineClockCircle,
+  audio2:AiTwotoneAudio,
+  warning2:AiTwotoneWarning,
 
-setting:AiTwotoneSetting,
-phone2:AiTwotonePhone,
-cloud2:AiFillCloud,
-lock2:AiFillLock,
-fire:AiFillFire,
+  setting:AiTwotoneSetting,
+  phone2:AiTwotonePhone,
+  cloud2:AiFillCloud,
+  lock2:AiFillLock,
+  fire:AiFillFire,
 
-picture:AiFillPicture,
-unlock2:AiFillUnlock,
-bulb:AiTwotoneBulb,
+  picture:AiFillPicture,
+  unlock2:AiFillUnlock,
+  bulb:AiTwotoneBulb,
 
-award:FiAward,
-link:FiLink,
-addfile:AiFillFileAdd,
+  award:FiAward,
+  link:FiLink,
+  addfile:AiFillFileAdd,
 
-fileimage:AiFillFileImage,
-addfolder:AiFillFolderAdd,
-barchart:FiBarChart,
-barchart2:FiBarChart2,
-file2:FiFile,
+  fileimage:AiFillFileImage,
+  addfolder:AiFillFolderAdd,
+  barchart:FiBarChart,
+  barchart2:FiBarChart2,
+  file2:FiFile,
 
-login:FiLogIn,
-logout:FiLogOut,
-paperclip:FiPaperclip,
+  login:FiLogIn,
+  logout:FiLogOut,
+  paperclip:FiPaperclip,
 
-feather:FiFeather,
-printer:FiPrinter,
-plusCircle:FiPlusCircle,
+  feather:FiFeather,
+  printer:FiPrinter,
+  plusCircle:FiPlusCircle,
 
 };

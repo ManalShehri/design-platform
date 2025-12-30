@@ -1,6 +1,6 @@
 // src/components/WorkshopInvitePoster.jsx
-import PosterHeader from "./PosterHeader.jsx";
-import PosterFooter from "./PosterFooter.jsx";
+import PosterHeader from "./Utl/PosterHeader.jsx";
+import PosterFooter from "./Utl/PosterFooter.jsx";
 import { ICONS_BY_KEY } from "../iconsConfig"; 
 
 export default function WorkshopInvitePoster({ data }) {
