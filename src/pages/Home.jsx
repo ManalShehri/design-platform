@@ -1,4 +1,7 @@
+import { useNavigate } from "react-router-dom";
+
 export default function Home({ onStart }) {
+  const navigate = useNavigate();
   return (
     <div className="relative min-h-[calc(100vh-56px)] bg-brand-800 text-white flex flex-col items-center justify-center px-6 overflow-hidden">
 
@@ -17,6 +20,12 @@ export default function Home({ onStart }) {
           className="inline-flex items-center justify-center px-8 py-3 rounded-xl text-lg font-semibold bg-brand-500 hover:brightness-110 transition shadow-card"
         >
           ابدأ الخدمة
+        </button>
+        <button
+          onClick={() => navigate("/login")}
+          className="inline-flex items-center justify-center px-8 py-3 rounded-xl text-lg font-semibold bg-white/10 hover:bg-white/15 transition shadow-card"
+        >
+          تسجيل الدخول
         </button>
       </div>
 

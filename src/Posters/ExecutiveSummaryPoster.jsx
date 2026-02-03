@@ -13,31 +13,30 @@ export default function ExecutiveSummaryPoster({ data }) {
   const rows = Array.isArray(tableRows) ? tableRows.slice(0, 6) : [];
 
   return (
-    <div className="w-full h-full bg-white text-[#205833] flex flex-col font-lina">
+    // <div className="w-full h-full bg-white text-[#205833] flex flex-col font-lina">
+      <div className="relative w-full h-full bg-white text-[#205833] flex flex-col font-lina overflow-hidden">
       {/* Header */}
-      <header className="px-12 pt-10 flex items-start justify-between">
+      {/* <header className="px-12 pt-10 flex items-start justify-between"> */}
+        <header className="relative z-10 px-12 pt-10 flex items-start justify-between">
         {/* Right: small dark green shape + title */}
         <div className="flex items-center gap-3">
-          <div className="w-5 h-10 bg-[#205833] rounded-sm" />
-          <h1 className="text-[34px] font-bold text-[#205833] leading-none">
+        {/* <p>hhhhhh</p> */}
+          <div className="w-3 h-10 bg-[#205833] rounded-sm" />
+          <h1 className="text-[30px] font-bold text-[#205833] leading-none">
             {title}
           </h1>
         </div>
-
-        {/* Left: logo */}
-        <div className="h-12 flex items-center">
-          {logoUrl ? (
-            <img src={logoUrl} alt="Logo" className="h-12 object-contain" />
-          ) : (
-            <div className="h-12 w-28 bg-slate-100 rounded" />
-          )}
+        <div className="h-18 flex items-center">
+          <img src="/src/assets/MEWA_logo_secondary.png" alt="Logo" className="h-12 object-contain" />
+          {/* <div className="h-12 w-28 bg-slate-100 rounded" /> */}
         </div>
       </header>
 
       {/* Body */}
-      <main className="px-12 pt-8 flex-1">
+      {/* <main className="px-12 pt-8 flex-1"> */}
+        <main className="relative z-10 px-12 pt-8 flex-1">
         {/* Light green box */}
-        <div className="bg-[#EAF5EC] rounded-3xl px-8 py-6 mb-7">
+        <div className="bg-[#EAF5EC] rounded-1xl px-8 py-6 mb-7">
           <p className="text-[18px] leading-relaxed text-[#205833]">
             {intro}
           </p>
@@ -79,15 +78,24 @@ export default function ExecutiveSummaryPoster({ data }) {
       </main>
 
       {/* Footer (left shading + right small text) */}
-      <footer className="px-12 pb-10 pt-6 flex items-end justify-between">
-        {/* left shading shape */}
-        <div className="h-10 w-56 rounded-xl bg-gradient-to-r from-[#205833]/20 to-transparent" />
+      {/* <footer className="px-12 pb-10 pt-6 flex items-end justify-between"> */}
+        <footer className="relative z-10 px-12 pb-10 pt-6 flex items-end justify-between">
+  <div className="bg-[#005D45] text-white px-4 py-2 rounded-l-lg rounded-r-none text-[10px]">
 
-        {/* right note */}
-        <div className="text-[12px] text-[#205833] opacity-90">
+        {/* <div className="text-[12px] text-[#205833] opacity-90"> */}
           {footerNote}
         </div>
+        {/* left shading shape */}
+        {/* <div className="h-10 w-56 rounded-xl bg-gradient-to-r from-[#205833]/20 to-transparent" /> */}
+
+        {/* right note */}
+        
       </footer>
+     <img
+        src="/src/assets/002.svg"
+        alt="Background Illustration"
+        className="absolute bottom-0 left-0 w-full opacity-10 pointer-events-none select-none z-0"
+      />
 
       {/* لو تبين نفس Footer component حقكم بدل الفوتر أعلاه:
           احذفي <footer>... واستعملي PosterFooter */}

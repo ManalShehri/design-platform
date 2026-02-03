@@ -107,7 +107,7 @@ export function getInitialData(template) {
     return {
       title: "ملخص تنفيذي",
       intro: "تهدف هذه الخطوات إلى ...",
-      footerNote: "نص توضيحي صغير في الأسفل",
+      footerNote: "ملخص تنفيذي",
       tableRows: [
         { id: 1, col1: "الهدف", col2: "وصف مختصر" },
         { id: 2, col1: "النطاق", col2: "حتى 6 صفوف كحد أقصى" },

@@ -53,9 +53,8 @@ const TEMPLATES = {
 
   "ملخص تنفيذي": [
     { name: "title", label: "العنوان", type: "text" },
-    { name: "intro", label: "النص داخل المربع الأخضر", type: "textarea" },
-    { name: "logoUrl", label: "الشعار", type: "file" },
-    { name: "footerNote", label: "نص الفوتر (يمين)", type: "text" },
+    { name: "intro", label: "نبذة", type: "textarea" },
+    { name: "footerNote", label: "نص التذييل", type: "text" },
   ],
 };
 
